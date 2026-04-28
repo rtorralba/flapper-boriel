@@ -116,6 +116,7 @@ Sub play()
                 End If
                 If pipeX(i) + PIPE_WIDTH = mainCharacterX Then
                     score = score + 1
+                    playScoreFX()
                 End If
                 If pipeX(i) <= 30 Then
                     If birdHitsPipe(mainCharacterX, mainCharacterY, pipeX(i), pipeGap(i)) Then

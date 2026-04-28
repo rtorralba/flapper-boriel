@@ -5,6 +5,7 @@
 #include "shadowScreen.bas"
 #include "generated/spriteset.bas"
 #include "draw.bas"
+#include "sound.bas"
 #include "play.bas"
 
 Border 0
