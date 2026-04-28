@@ -1,0 +1,1 @@
+Dim mainCharacterX, mainCharacterY, mainCharacterOldX, mainCharacterOldY As Ubyte

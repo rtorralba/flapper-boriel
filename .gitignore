@@ -1,0 +1,3 @@
+venv/
+src/generated
+dist/soniczx.tap
