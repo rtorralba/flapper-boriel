@@ -28,6 +28,7 @@ Sub initGame()
     Dim b As Ubyte
     For b = 0 To 1
         switchBankToDrawHidden()
+        Ink 7
         Paper 1
         Cls
         drawHUD()
@@ -48,15 +49,17 @@ Sub initGame()
     shadowPipeX1(1) = pipeX(1)
 End Sub
 
-' Check collision: bird (2x2 at bx,by) vs pipe at px with gap pg
-Function birdHitsPipe(bx As Ubyte, by As Ubyte, px As Ubyte, pg As Ubyte) As Ubyte
-    ' Horizontal overlap: bird cols bx..bx+1, pipe cols px..px+1
-    If bx + 1 < px Then Return 0
-    If bx > px + PIPE_WIDTH - 1 Then Return 0
-    ' Vertical overlap with solid parts
-    ' Top pipe: rows 0..pg-1, bottom pipe: rows pg+PIPE_GAP_SIZE..22
-    If by < pg Then Return 1        ' bird top overlaps top pipe
-    If by + 1 >= pg + PIPE_GAP_SIZE Then Return 1  ' bird bottom overlaps bottom pipe
+' Check collision: bird cell is a pipe if Paper = 4 (green)
+Function checkBirdCollision(bx As Ubyte, by As Ubyte) As Ubyte
+    Dim attrBuf(0) As Ubyte
+    getPaintData(bx,     by,     1, 1, @attrBuf(0))
+    If attrBuf(0) <> 15 Then Return 1
+    getPaintData(bx + 1, by,     1, 1, @attrBuf(0))
+    If attrBuf(0) <> 15 Then Return 1
+    getPaintData(bx,     by + 1, 1, 1, @attrBuf(0))
+    If attrBuf(0) <> 15 Then Return 1
+    getPaintData(bx + 1, by + 1, 1, 1, @attrBuf(0))
+    If attrBuf(0) <> 15 Then Return 1
     Return 0
 End Function
 
@@ -106,7 +109,7 @@ Sub play()
             End If
             mainCharacterY = newY
 
-            ' --- Pipe movement, scoring, collision ---
+            ' --- Pipe movement and scoring ---
             For i = 0 To 1
                 If pipeX(i) = 0 Then
                     pipeX(i) = 32
@@ -117,11 +120,6 @@ Sub play()
                 If pipeX(i) + PIPE_WIDTH = mainCharacterX Then
                     score = score + 1
                     playScoreFX()
-                End If
-                If pipeX(i) <= 30 Then
-                    If birdHitsPipe(mainCharacterX, mainCharacterY, pipeX(i), pipeGap(i)) Then
-                        gameOver = 1
-                    End If
                 End If
             Next i
 
@@ -137,7 +135,7 @@ Sub play()
 
             ' --- Erase bird at its shadow position for this buffer ---
             For er = 0 To 1
-                Print At shadowBirdY(bufIdx) + er, shadowBirdX(bufIdx); INK 1; Paper 1; "  "
+                Print At shadowBirdY(bufIdx) + er, shadowBirdX(bufIdx); INK 7; Paper 1; "  "
             Next er
 
             ' --- Incremental pipe update (erase 2 trailing, draw 2 leading) ---
@@ -173,6 +171,10 @@ Sub play()
             Next i
 
             ' --- Draw bird and save shadow position ---
+            ' Collision: check attributes at bird position BEFORE overwriting them
+            If checkBirdCollision(mainCharacterX, mainCharacterY) Then
+                gameOver = 1
+            End If
             drawMainCharacter()
             shadowBirdX(bufIdx) = mainCharacterX
             shadowBirdY(bufIdx) = mainCharacterY

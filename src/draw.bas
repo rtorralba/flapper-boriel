@@ -36,7 +36,7 @@ End Sub
 Sub eraseColumn(col As Ubyte)
     Dim r As Ubyte
     For r = 0 To 20
-        Print At r, col; INK 1; Paper 1; " "
+        Print At r, col; INK 7; Paper 1; " "
     Next r
 End Sub
 
