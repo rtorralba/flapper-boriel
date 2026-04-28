@@ -1,69 +1,61 @@
-' Play a two-tone "score" FX on the AY chip
+' Bell-like score FX: high tone with AY hardware envelope decay
 Sub playScoreFX()
     Asm
-        LOCAL sfxWait1, sfxOuter1, sfxWait2, sfxOuter2
-
-        ; --- Note 1: channel A, period 40 (~1562 Hz) ---
+        ; Set tone period for channel A: period 20 (~3906 Hz, bell-ish)
         LD BC, $FFFD
-        LD A, 0             ; reg 0 = channel A tone period low
+        LD A, 0
         OUT (C), A
         LD BC, $BFFD
-        LD A, 40
+        LD A, 20
         OUT (C), A
 
         LD BC, $FFFD
-        LD A, 1             ; reg 1 = channel A tone period high
+        LD A, 1
         OUT (C), A
         LD BC, $BFFD
         XOR A
         OUT (C), A
 
+        ; Mixer: channel A tone on
         LD BC, $FFFD
-        LD A, 7             ; mixer: channel A tone on, rest off
+        LD A, 7
         OUT (C), A
         LD BC, $BFFD
         LD A, %00111110
         OUT (C), A
 
+        ; Envelope period low (reg 11): longer decay
         LD BC, $FFFD
-        LD A, 8             ; channel A volume = max
+        LD A, 11
         OUT (C), A
         LD BC, $BFFD
-        LD A, 15
-        OUT (C), A
-
-        ; delay ~0.1s
-        LD D, 25
-sfxOuter1:
-        LD B, 0
-sfxWait1:
-        DJNZ sfxWait1
-        DEC D
-        JR NZ, sfxOuter1
-
-        ; --- Note 2: period 25 (~2500 Hz) ---
-        LD BC, $FFFD
         LD A, 0
         OUT (C), A
+
+        ; Envelope period high (reg 12)
+        LD BC, $FFFD
+        LD A, 12
+        OUT (C), A
         LD BC, $BFFD
-        LD A, 25
+        LD A, 6
         OUT (C), A
 
-        ; delay ~0.1s
-        LD D, 25
-sfxOuter2:
-        LD B, 0
-sfxWait2:
-        DJNZ sfxWait2
-        DEC D
-        JR NZ, sfxOuter2
+        ; Envelope shape (reg 13): 0x09 = single decay (\)
+        LD BC, $FFFD
+        LD A, 13
+        OUT (C), A
+        LD BC, $BFFD
+        LD A, $09
+        OUT (C), A
 
-        ; --- Silence ---
+        ; Channel A volume: use envelope (bit4=1)
         LD BC, $FFFD
         LD A, 8
         OUT (C), A
         LD BC, $BFFD
-        XOR A
+        LD A, $10
         OUT (C), A
+
+        ; Envelope shape triggers automatically - no need to wait, AY decays on its own
     End Asm
 End Sub

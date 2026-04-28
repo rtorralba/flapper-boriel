@@ -31,6 +31,11 @@ Sub initGame()
         Ink 7
         Paper 1
         Cls
+        ' Paint floor row red matte
+        Dim fc As Ubyte
+        For fc = 0 To 31
+            Print At 20, fc; Bright 0; INK 2; Paper 2; " "
+        Next fc
         drawHUD()
         drawPipe(pipeX(0), pipeGap(0))
         drawMainCharacter()
@@ -104,7 +109,7 @@ Sub play()
             birdYAcc = birdYAcc - dy * 4
             newY = mainCharacterY + dy
             If newY < 0 Then newY = 0
-            If newY > 19 Then
+            If newY > 18 Then
                 gameOver = 1
             End If
             mainCharacterY = newY
