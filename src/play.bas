@@ -81,13 +81,16 @@ Sub play()
         Do
             ' --- Input ---
             If isSpacePressed() Then
-                birdVelQ = -8
+                birdVelQ = -7
                 birdYAcc = 0
             End If
 
             ' --- Physics (accumulator eliminates dead zone) ---
             birdVelQ = birdVelQ + 2
             If birdVelQ > 10 Then birdVelQ = 10
+
+            ' Reset accumulator when velocity crosses zero to avoid dead zone at apex
+            If birdVelQ > 0 And birdYAcc < 0 Then birdYAcc = 0
 
             mainCharacterOldX = mainCharacterX
             mainCharacterOldY = mainCharacterY
