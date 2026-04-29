@@ -1,9 +1,6 @@
 #include <putchars.bas>
-#include <memorybank.bas>
-#include <scrbuffer.bas>
 #include <retrace.bas>
 #include "definitions.bas"
-#include "shadowScreen.bas"
 #include "generated/spriteset.bas"
 #include "draw.bas"
 #include "sound.bas"

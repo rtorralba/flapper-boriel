@@ -32,11 +32,6 @@ Sub initGame()
     pipeGap(0) = 5
     pipeGap(1) = 9
 
-    ' Standard screen only - no double buffering needed
-    deactivateShadowScreen()
-    SetBank(5)
-    currentBank = 5
-
     Ink 0
     Paper 1
     Cls
@@ -127,8 +122,8 @@ Sub play()
             Dim dy As Integer = birdYAcc / 4
             birdYAcc = birdYAcc - dy * 4
             newY = mainCharacterY + dy
-            If newY < 0 Then newY = 0
-            If newY > 18 Then
+            If newY < 1 Then newY = 1
+            If newY > 19 Then
                 gameOver = 1
             End If
             mainCharacterY = newY
