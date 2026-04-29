@@ -26,7 +26,7 @@ Sub scrollPlayfieldAttrs()
     LOCAL scrollRow
         ld hl, $5821        ; src = attr row 1, col 1
         ld de, $5820        ; dst = attr row 1, col 0
-        ld b, 21            ; 21 rows (rows 1..21)
+        ld b, 22            ; 22 rows (rows 1..22)
 scrollRow:
         push bc
         ld bc, 31           ; copy 31 bytes: cols 1..31 -> 0..30
@@ -55,11 +55,11 @@ Sub writeAttrColumn(col As Ubyte, gap As Ubyte)
         paint(col, 1, 1, gap, ATTR_PIPE)
     End If
     paint(col, gap + 1, 1, PIPE_GAP_SIZE, ATTR_SKY)
-    Dim pipeLow As Ubyte = 20 - gap - PIPE_GAP_SIZE
+    Dim pipeLow As Ubyte = 22 - gap - PIPE_GAP_SIZE
     If pipeLow > 0 Then
         paint(col, gap + PIPE_GAP_SIZE + 1, 1, pipeLow, ATTR_PIPE)
     End If
-    paint(col, 21, 1, 1, ATTR_FLOOR)
+    paint(col, 23, 1, 1, ATTR_FLOOR)
 End Sub
 
 ' ---------------------------------------------------------------
@@ -67,8 +67,8 @@ End Sub
 ' Fills column col with sky attr for rows 0..19, floor at row 20.
 ' ---------------------------------------------------------------
 Sub writeSkyColumn(col As Ubyte)
-    paint(col, 1, 1, 20, ATTR_SKY)
-    paint(col, 21, 1, 1, ATTR_FLOOR)
+    paint(col, 1, 1, 22, ATTR_SKY)
+    paint(col, 23, 1, 1, ATTR_FLOOR)
 End Sub
 
 ' ---------------------------------------------------------------
@@ -76,8 +76,8 @@ End Sub
 ' Clears play area pixels and attributes ready for a new game.
 ' ---------------------------------------------------------------
 Sub initPlayfield()
-    paint(0, 1, 32, 20, ATTR_SKY)
-    paint(0, 21, 32, 1, ATTR_FLOOR)
+    paint(0, 1, 32, 22, ATTR_SKY)
+    paint(0, 23, 32, 1, ATTR_FLOOR)
 End Sub
 
 ' ---------------------------------------------------------------
@@ -103,19 +103,26 @@ End Sub
 Sub drawHUD()
     paint(0, 0, 32, 1, 7)  ' Paper 0 (black), Ink 7 (white) for full row
     Print At 0, 0; INK 7; Paper 0; "SCORE:"
-    Print At 0, 25; INK 7; Paper 0; "FLAPPER"
+    Print At 0, 10; INK 7; Paper 0; "HI:"
+    Print At 0, 18; INK 7; Paper 0; "BORIEL FLAPPER"
 End Sub
 
 ' Update score display in HUD
 Sub drawScore()
-    Print At 0, 7; INK 6; Paper 0; score; "  "
+    Print At 0, 6; INK 6; Paper 0; score;
+End Sub
+
+' Update hi-score display in HUD
+Sub drawHiScore()
+    Print At 0, 13; INK 5; Paper 0; hiScore; "  "
 End Sub
 
 ' Show game over message
 Sub drawGameOver()
     Print At 8, 8;  INK 7; Paper 1; " GAME OVER  "
     Print At 10, 8; INK 6; Paper 1; " Score: "; score; "  "
-    Print At 12, 8; INK 5; Paper 1; " Press SPACE "
+    Print At 11, 8; INK 5; Paper 1; " Best:  "; hiScore; "  "
+    Print At 14, 8; INK 5; Paper 1; " Press SPACE "
 End Sub
 
 ' Show start screen

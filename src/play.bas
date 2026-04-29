@@ -39,6 +39,7 @@ Sub initGame()
     drawHUD()
     drawMainCharacter()
     drawScore()
+    drawHiScore()
 End Sub
 
 ' ---------------------------------------------------------------
@@ -123,7 +124,8 @@ Sub play()
             birdYAcc = birdYAcc - dy * 4
             newY = mainCharacterY + dy
             If newY < 1 Then newY = 1
-            If newY > 19 Then
+            If newY > 21 Then
+                newY = 21
                 gameOver = 1
             End If
             mainCharacterY = newY
@@ -162,6 +164,10 @@ Sub play()
             drawScore()
 
         Loop Until gameOver
+
+        If score > hiScore Then
+            hiScore = score
+        End If
 
         ' Game over screen
         drawGameOver()
