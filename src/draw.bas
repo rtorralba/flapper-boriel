@@ -10,7 +10,7 @@ Sub scrollPlayfieldAttrs()
 End Sub
 
 ' ---------------------------------------------------------------
-' writeAttrColumn col, gap
+' writePipeColumn col, gap
 ' Writes attribute bytes for a single column at col (0..31)
 ' in the play area (rows 0..20) using direct POKE to the
 ' currently mapped attribute buffer.
@@ -19,7 +19,7 @@ End Sub
 ' Rows gap+GAP..19     -> ATTR_PIPE
 ' Row 20               -> ATTR_FLOOR
 ' ---------------------------------------------------------------
-Sub writeAttrColumn(col As Ubyte, gap As Ubyte)
+Sub writePipeColumn(col As Ubyte, gap As Ubyte)
     If gap > 0 Then
         paint(col, 1, 1, gap, ATTR_PIPE)
     End If
@@ -84,12 +84,12 @@ Sub paintRightColumn()
     ' wc 4..17        -> sky    (14 cols)
     ' wc 18..21       -> pipe1  (4 cols)
     ' wc 22..35       -> sky    (14 cols)
-    Dim period As Ubyte = PIPE_PERIOD
-    Dim wc As Ubyte = worldCol Mod period
+
+    Dim wc As Ubyte = worldCol Mod PIPE_PERIOD
     If wc < PIPE_WIDTH Then
-        writeAttrColumn(31, pipeGap(0))
+        writePipeColumn(31, pipeGap(0))
     Elseif wc >= PIPE_SPAWN_INTERVAL And wc < PIPE_SPAWN_INTERVAL + PIPE_WIDTH Then
-        writeAttrColumn(31, pipeGap(1))
+        writePipeColumn(31, pipeGap(1))
     Else
         writeSkyColumn(31)
     End If
