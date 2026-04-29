@@ -1,11 +1,3 @@
-' Returns 1 if SPACE key pressed
-Function isSpacePressed() As Ubyte
-    If Inkey$ = " " Then
-        Return 1
-    End If
-    Return 0
-End Function
-
 ' ---------------------------------------------------------------
 ' World scroll counter: tracks how many columns have scrolled in
 ' for the rightmost pipe, so we know what to paint in col 31.
@@ -105,30 +97,9 @@ Sub play()
             waitretrace
             waitretrace
 
-            ' --- Input ---
-            If isSpacePressed() Then
-                birdVelQ = -7
-                birdYAcc = 0
-            End If
+            readKeyboard()
 
-            ' --- Physics ---
-            birdVelQ = birdVelQ + 2
-            If birdVelQ > 10 Then birdVelQ = 10
-            If birdVelQ > 0 And birdYAcc < 0 Then birdYAcc = 0
-
-            mainCharacterOldY = mainCharacterY
-
-            Dim newY As Integer
-            birdYAcc = birdYAcc + birdVelQ
-            Dim dy As Integer = birdYAcc / 4
-            birdYAcc = birdYAcc - dy * 4
-            newY = mainCharacterY + dy
-            If newY < 1 Then newY = 1
-            If newY > 21 Then
-                newY = 21
-                gameOver = 1
-            End If
-            mainCharacterY = newY
+            gravity()
 
             ' --- Scoring ---
             ' pipe0 trailing col (wc=3) painted at worldCol=3, reaches col6 at worldCol=28  -> wc=28%36=28
