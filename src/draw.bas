@@ -1,18 +1,3 @@
-' ---------------------------------------------------------------
-' Attribute constants
-'   PAPER 1 (blue)  INK 0 = %00_001_000 = 8  -> sky
-'   PAPER 4 (green) INK 0 = %00_100_000 = 32 -> pipe
-'   PAPER 2 (red)   INK 2 = %00_010_010 = 18 -> floor
-'
-' All attribute writes target the standard screen at 0x5800.
-' paint() from putchars.bas is used throughout (fast ASM, no POKE loops).
-' scrollPlayfieldAttrs() is the only inline ASM (no library equivalent).
-' ---------------------------------------------------------------
-
-Const ATTR_SKY   As Ubyte = 14   ' Paper 1, Ink 1  = %00_001_110
-Const ATTR_PIPE  As Ubyte = 32  ' Paper 4, Ink 0  = %00_100_000
-Const ATTR_FLOOR As Ubyte = 18  ' Paper 2, Ink 2  = %00_010_010
-
 Sub scrollPlayfieldAttrs()
     Dim row As Ubyte
     Dim src As UInteger = $5821
@@ -135,18 +120,4 @@ End Sub
 ' Update hi-score display in HUD
 Sub drawHiScore()
     Print At 0, 13; Ink 5; Paper 0; hiScore; "  "
-End Sub
-
-' Show game over message
-Sub drawGameOver()
-    Print At 8, 8;  Ink 7; Paper 1; " GAME Over  "
-    Print At 10, 8; Ink 6; Paper 1; " Score: "; score; "  "
-    Print At 11, 8; Ink 5; Paper 1; " Best:  "; hiScore; "  "
-    Print At 14, 8; Ink 5; Paper 1; " Press SPACE "
-End Sub
-
-' Show start screen
-Sub drawStartScreen()
-    Print At 8,  9; Ink 7; Paper 1; " BORIEL FLAPPER  "
-    Print At 10, 9; Ink 6; Paper 1; " Press SPACE "
 End Sub
