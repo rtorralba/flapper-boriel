@@ -67,7 +67,7 @@ End Sub
 Sub drawGameOver()
     Print At 8, 8;  INK 7; Paper 0; " GAME OVER  "
     Print At 10, 8; INK 6; Paper 0; " Score: "; score; "  "
-    Print At 12, 9; INK 5; Paper 0; " Press SPACE "
+    Print At 12, 8; INK 5; Paper 0; " Press SPACE "
 End Sub
 
 ' Show start screen
