@@ -41,28 +41,28 @@ Sub checkScore()
     If score > hiScore Then
         hiScore = score
     End If
+
+    drawScore()
 End Sub
 
-Sub play()
+Sub screenSync()
+    waitretrace
+    waitretrace
+    waitretrace
+    waitretrace
+End Sub
+
+Sub showPlayGameScreen()
     initGame()
     
     Do
-        ' --- Wait 2 VBLs per game tick -> 25fps logic (same as original with double-buffer) ---
-        waitretrace
-        waitretrace
-        waitretrace
-        waitretrace
+        screenSync()
         
         readKeyboard()
-        
         gravity()
-        
         scroll()
-        
         redrawMainCharacter()
-        
         checkScore()
-        drawScore()
 
         If checkBirdCollision(mainCharacterX, mainCharacterY) Then
             showGameOverScreen()

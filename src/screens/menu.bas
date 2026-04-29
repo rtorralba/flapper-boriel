@@ -3,5 +3,6 @@ Sub showMenuScreen()
     Print At 10, 9; Ink 6; Paper 1; " Press SPACE "
 
     waitForSpace()
-    play()
+    
+    showPlayGameScreen()
 End Sub

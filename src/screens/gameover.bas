@@ -6,5 +6,5 @@ Sub showGameOverScreen()
 
     waitForSpace()
 
-    play()
+    showPlayGameScreen()
 End Sub
