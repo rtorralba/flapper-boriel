@@ -16,6 +16,7 @@ Const NUM_PIPES As Ubyte = 2
 Const PIPE_GAP_SIZE As Ubyte = 6
 Const PIPE_WIDTH As Ubyte = 4
 Const PIPE_SPAWN_INTERVAL As Ubyte = 18
+Const PIPE_PERIOD As Ubyte = 36  ' 2 * PIPE_SPAWN_INTERVAL
 
 Dim pipeGap(1) As Ubyte
 

@@ -13,31 +13,15 @@ Const ATTR_SKY   As Ubyte = 14   ' Paper 1, Ink 1  = %00_001_110
 Const ATTR_PIPE  As Ubyte = 32  ' Paper 4, Ink 0  = %00_100_000
 Const ATTR_FLOOR As Ubyte = 18  ' Paper 2, Ink 2  = %00_010_010
 
-' ---------------------------------------------------------------
-' scrollPlayfieldAttrs
-' Shifts the attribute bytes of rows 0..20 one cell LEFT using
-' Z80 LDIR: each row is copied from col1..31 back to col0..30,
-' leaving col 31 unchanged (caller fills it).
-' Works on the CURRENTLY MAPPED attribute buffer.
-' ---------------------------------------------------------------
 Sub scrollPlayfieldAttrs()
-    Asm
-    PROC
-    LOCAL scrollRow
-        ld hl, $5821        ; src = attr row 1, col 1
-        ld de, $5820        ; dst = attr row 1, col 0
-        ld b, 22            ; 22 rows (rows 1..22)
-scrollRow:
-        push bc
-        ld bc, 31           ; copy 31 bytes: cols 1..31 -> 0..30
-        ldir
-        ; after ldir: HL = col 0 of next row, DE = col 31 of current row
-        inc de              ; DE = col 0 of next row
-        inc hl              ; HL = col 1 of next row
-        pop bc
-        djnz scrollRow
-    ENDP
-    End Asm
+    Dim row As Ubyte
+    Dim src As UInteger = $5821
+    Dim dst As UInteger = $5820
+    For row = 0 To 21
+        MemMove(src, dst, 31)
+        src = src + 32
+        dst = dst + 32
+    Next row
 End Sub
 
 ' ---------------------------------------------------------------
@@ -92,9 +76,45 @@ End Sub
 ' ---------------------------------------------------------------
 ' Erase bird sprite at given position (restore sky attrs + blank pixels)
 ' ---------------------------------------------------------------
-Sub eraseBird(bx As Ubyte, by As Ubyte)
+Sub eraseMainCharacter(bx As Ubyte, by As Ubyte)
     ' Zero out pixels only - no Print, no paint: attrs stay intact
     putChars(bx, by, 2, 2, @blankSprite(0))
+End Sub
+
+Sub redrawMainCharacter()
+    eraseMainCharacter(mainCharacterX, mainCharacterOldY)
+    drawMainCharacter()
+End Sub
+
+' ---------------------------------------------------------------
+' Determine what to draw in column 31 given current worldCol.
+' Each pipe slot covers PIPE_WIDTH + PIPE_SPAWN_INTERVAL columns.
+' Within that window: cols 0..PIPE_WIDTH-1 are pipe, rest is sky.
+' Two pipes are interleaved: pipe0 starts at worldCol=0 phase,
+' pipe1 is offset by PIPE_SPAWN_INTERVAL columns.
+' ---------------------------------------------------------------
+Sub paintRightColumn()
+    ' period = 2 * PIPE_SPAWN_INTERVAL = 36
+    ' wc 0..3         -> pipe0  (4 cols)
+    ' wc 4..17        -> sky    (14 cols)
+    ' wc 18..21       -> pipe1  (4 cols)
+    ' wc 22..35       -> sky    (14 cols)
+    Dim period As Ubyte = PIPE_PERIOD
+    Dim wc As Ubyte = worldCol Mod period
+    If wc < PIPE_WIDTH Then
+        writeAttrColumn(31, pipeGap(0))
+    Elseif wc >= PIPE_SPAWN_INTERVAL And wc < PIPE_SPAWN_INTERVAL + PIPE_WIDTH Then
+        writeAttrColumn(31, pipeGap(1))
+    Else
+        writeSkyColumn(31)
+    End If
+End Sub
+
+Sub scroll()
+    ' --- Scroll + paint (worldCol increment is AFTER so scoring and paint use same value) ---
+    scrollPlayfieldAttrs()
+    paintRightColumn()
+    worldCol = worldCol + 1
 End Sub
 
 ' ---------------------------------------------------------------
@@ -102,31 +122,31 @@ End Sub
 ' ---------------------------------------------------------------
 Sub drawHUD()
     paint(0, 0, 32, 1, 7)  ' Paper 0 (black), Ink 7 (white) for full row
-    Print At 0, 0; INK 7; Paper 0; "SCORE:"
-    Print At 0, 10; INK 7; Paper 0; "HI:"
-    Print At 0, 18; INK 7; Paper 0; "BORIEL FLAPPER"
+    Print At 0, 0; Ink 7; Paper 0; "SCORE:"
+    Print At 0, 10; Ink 7; Paper 0; "HI:"
+    Print At 0, 18; Ink 7; Paper 0; "BORIEL FLAPPER"
 End Sub
 
 ' Update score display in HUD
 Sub drawScore()
-    Print At 0, 6; INK 6; Paper 0; score;
+    Print At 0, 6; Ink 6; Paper 0; score;
 End Sub
 
 ' Update hi-score display in HUD
 Sub drawHiScore()
-    Print At 0, 13; INK 5; Paper 0; hiScore; "  "
+    Print At 0, 13; Ink 5; Paper 0; hiScore; "  "
 End Sub
 
 ' Show game over message
 Sub drawGameOver()
-    Print At 8, 8;  INK 7; Paper 1; " GAME OVER  "
-    Print At 10, 8; INK 6; Paper 1; " Score: "; score; "  "
-    Print At 11, 8; INK 5; Paper 1; " Best:  "; hiScore; "  "
-    Print At 14, 8; INK 5; Paper 1; " Press SPACE "
+    Print At 8, 8;  Ink 7; Paper 1; " GAME Over  "
+    Print At 10, 8; Ink 6; Paper 1; " Score: "; score; "  "
+    Print At 11, 8; Ink 5; Paper 1; " Best:  "; hiScore; "  "
+    Print At 14, 8; Ink 5; Paper 1; " Press SPACE "
 End Sub
 
 ' Show start screen
 Sub drawStartScreen()
-    Print At 8,  9; INK 7; Paper 1; " BORIEL FLAPPER  "
-    Print At 10, 9; INK 6; Paper 1; " Press SPACE "
+    Print At 8,  9; Ink 7; Paper 1; " BORIEL FLAPPER  "
+    Print At 10, 9; Ink 6; Paper 1; " Press SPACE "
 End Sub

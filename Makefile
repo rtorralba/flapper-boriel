@@ -21,7 +21,7 @@ assets:
 	$(tileset)
 
 build:
-	zxbc -W150 -W160 -W170 -W190 -W130 -O 2 -S 24576 -H 128 --heap-address 23755 -D HIDE_LOAD_MSG src/main.bas -taB -o dist/flapper.tap
+	zxbc -W150 -W160 -W170 -W190 -W130 -O 2 -S 24576 -H 128 --heap-address 23755 -D HIDE_LOAD_MSG src/main.bas -aB --output-format=tap -o dist/flapper.tap
 
 run:
 	fuse dist/flapper.tap
