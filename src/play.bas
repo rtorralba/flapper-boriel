@@ -1,21 +1,20 @@
 ' Initialise all game variables
 Sub initGame()
     Ink 0: Paper 1: Cls
-
+    
     mainCharacterX = 6
     mainCharacterY = 10
     mainCharacterOldY = mainCharacterY
     birdVelQ = 8
     birdYAcc = 0
     score = 0
-    gameOver = 0
     
     ' World column counter: counts how many columns have entered from the right.
     ' Col 31 shows worldCol mod (PIPE_SPAWN_INTERVAL + PIPE_WIDTH) for each pipe slot.
     worldCol = 0
     pipeGap(0) = 5
     pipeGap(1) = 9
-        
+    
     drawHUD()
     initPlayfield()
     drawMainCharacter()
@@ -38,50 +37,35 @@ Sub checkScore()
         playScoreFX()
         pipeGap(1) = 3 + ((score + 5) Mod 12)
     End If
+    
+    If score > hiScore Then
+        hiScore = score
+    End If
 End Sub
 
 Sub play()
-    Do  ' outer restart loop
-        
-        Do
-        Loop Until isSpacePressed()
-        Do
-        Loop While isSpacePressed()
-        
-        initGame()
-        
-        ' Main game loop
-        Do
-            ' --- Wait 2 VBLs per game tick -> 25fps logic (same as original with double-buffer) ---
-            waitretrace
-            waitretrace
-            waitretrace
-            waitretrace
-            
-            readKeyboard()
-            
-            gravity()
-            
-            scroll()
-            
-            checkCollision()
-            
-            redrawMainCharacter()
-            
-            checkScore()
-            drawScore()
-        Loop Until gameOver
-        
-        If score > hiScore Then
-            hiScore = score
-        End If
-        
-        ' Game over screen
-        drawGameOver()
-        
-        Do
-        Loop While isSpacePressed()
-        
-    Loop  ' restart
+    initGame()
     
+    Do
+        ' --- Wait 2 VBLs per game tick -> 25fps logic (same as original with double-buffer) ---
+        waitretrace
+        waitretrace
+        waitretrace
+        waitretrace
+        
+        readKeyboard()
+        
+        gravity()
+        
+        scroll()
+        
+        redrawMainCharacter()
+        
+        checkScore()
+        drawScore()
+
+        If checkBirdCollision(mainCharacterX, mainCharacterY) Then
+            showGameOverScreen()
+        End If
+    Loop
 End Sub

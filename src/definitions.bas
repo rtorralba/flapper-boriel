@@ -26,7 +26,3 @@ Dim worldCol As UInteger
 ' Score
 Dim score As Ubyte
 Dim hiScore As Ubyte
-
-' Game state
-Dim gameOver As Ubyte
-Dim gameStarted As Ubyte

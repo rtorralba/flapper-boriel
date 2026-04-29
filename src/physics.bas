@@ -13,8 +13,7 @@ Sub gravity()
     newY = mainCharacterY + dy
     If newY < 1 Then newY = 1
     If newY > 21 Then
-        newY = 21
-        gameOver = 1
+        newY = 22
     End If
     mainCharacterY = newY
 End Sub

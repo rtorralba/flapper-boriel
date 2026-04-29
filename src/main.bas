@@ -10,10 +10,9 @@
 #include "collision.bas"
 #include "sound.bas"
 #include "play.bas"
+#include "screens/menu.bas"
+#include "screens/gameover.bas"
 
 Border 0: Paper 1: Ink 7: Cls
 
-drawHUD()
-drawStartScreen()
-
-play()
+showMenuScreen()

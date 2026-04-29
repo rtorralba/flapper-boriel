@@ -17,3 +17,10 @@ Sub waitUntilSpaceReleased()
     Do
     Loop While isSpacePressed()
 End Sub
+
+Sub waitForSpace()
+    Do
+    Loop Until isSpacePressed()
+    Do
+    Loop While isSpacePressed()
+End Sub
