@@ -1,33 +1,26 @@
 ' Bird position (in 8px cells, range 0..31 X, 0..21 Y for 2-cell tall bird)
 Dim mainCharacterX As Ubyte
 Dim mainCharacterY As Ubyte
-Dim mainCharacterOldX As Ubyte
 Dim mainCharacterOldY As Ubyte
 
-' Attribute for bird: INK 7, Paper 1 = 1*8+7 = 15 (4 cells: 2x2)
-Dim birdAttr(3) As Ubyte => { 15, 15, 15, 15 }
+' Blank 2x2 sprite (32 zero bytes) used to erase bird pixels without touching attrs
+Dim blankSprite(31) As Ubyte => {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0}
 
 ' Bird physics (fixed-point: velocity in 1/4 cell units)
 Dim birdVelQ As Integer   ' velocity * 4 (positive = down)
-Dim birdYAcc As Integer   ' sub-cell accumulator, carries fractional movement between frames
+Dim birdYAcc As Integer   ' sub-cell accumulator
 
-' Pipe state (two pipes on screen, each is a column)
-' pipeX: cell column of the pipe (0..31)
-' pipeGap: cell row of the gap top (0..19, gap is GAP_SIZE rows tall)
+' Pipe state
+' pipeGap(i): row of the gap top for pipe slot i
 Const NUM_PIPES As Ubyte = 2
-Const PIPE_GAP_SIZE As Ubyte = 6       ' gap height in cells
-Const PIPE_WIDTH As Ubyte = 4          ' pipe width in cells
-Const PIPE_SPAWN_INTERVAL As Ubyte = 18 ' cells between pipe columns
+Const PIPE_GAP_SIZE As Ubyte = 6
+Const PIPE_WIDTH As Ubyte = 4
+Const PIPE_SPAWN_INTERVAL As Ubyte = 18
 
-Dim pipeX(1) As Ubyte
 Dim pipeGap(1) As Ubyte
-Dim pipeActive(1) As Ubyte
 
-' Double-buffer shadow positions (index = buffer: 0=bank5, 1=bank7)
-Dim shadowBirdX(1) As Ubyte
-Dim shadowBirdY(1) As Ubyte
-Dim shadowPipeX0(1) As Ubyte   ' per-buffer X of pipe 0
-Dim shadowPipeX1(1) As Ubyte   ' per-buffer X of pipe 1
+' World scroll counter: how many columns have entered from the right
+Dim worldCol As UInteger
 
 ' Score
 Dim score As Ubyte
