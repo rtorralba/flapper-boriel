@@ -2,15 +2,22 @@ Sub scrollPlayfieldAttrs()
     Dim row As Ubyte
     Dim src As UInteger = $5821
     Dim dst As UInteger = $5820
-    For row = 0 To 21
+    For row = 0 To 23
         MemMove(src, dst, 31)
         src = src + 32
         dst = dst + 32
     Next row
 End Sub
 
+Function floorAttr() As Ubyte
+    Dim t As Ubyte = worldCol Mod 3
+    If t = 0 Then Return ATTR_FLOOR
+    If t = 1 Then Return ATTR_FLOOR_BRIGHT
+    Return ATTR_FLOOR_MAG
+End Function
+
 ' ---------------------------------------------------------------
-' writePipeColumn col, gap
+' writePipeColumn col, gap, attr
 ' Writes attribute bytes for a single column at col (0..31)
 ' in the play area (rows 0..20) using direct POKE to the
 ' currently mapped attribute buffer.
@@ -19,16 +26,16 @@ End Sub
 ' Rows gap+GAP..19     -> ATTR_PIPE
 ' Row 20               -> ATTR_FLOOR
 ' ---------------------------------------------------------------
-Sub writePipeColumn(col As Ubyte, gap As Ubyte)
+Sub writePipeColumn(col As Ubyte, gap As Ubyte, attr As Ubyte)
     If gap > 0 Then
-        paint(col, 1, 1, gap, ATTR_PIPE)
+        paint(col, 1, 1, gap, attr)
     End If
     paint(col, gap + 1, 1, PIPE_GAP_SIZE, ATTR_SKY)
     Dim pipeLow As Ubyte = 22 - gap - PIPE_GAP_SIZE
     If pipeLow > 0 Then
-        paint(col, gap + PIPE_GAP_SIZE + 1, 1, pipeLow, ATTR_PIPE)
+        paint(col, gap + PIPE_GAP_SIZE + 1, 1, pipeLow, attr)
     End If
-    paint(col, 23, 1, 1, ATTR_FLOOR)
+    paint(col, 23, 1, 1, floorAttr())
 End Sub
 
 ' ---------------------------------------------------------------
@@ -37,7 +44,7 @@ End Sub
 ' ---------------------------------------------------------------
 Sub writeSkyColumn(col As Ubyte)
     paint(col, 1, 1, 22, ATTR_SKY)
-    paint(col, 23, 1, 1, ATTR_FLOOR)
+    paint(col, 23, 1, 1, floorAttr())
 End Sub
 
 ' ---------------------------------------------------------------
@@ -46,7 +53,19 @@ End Sub
 ' ---------------------------------------------------------------
 Sub initPlayfield()
     paint(0, 1, 32, 22, ATTR_SKY)
-    paint(0, 23, 32, 1, ATTR_FLOOR)
+    Dim c As Ubyte
+    For c = 0 To 31
+        Dim t As Ubyte = c Mod 3
+        Dim fa As Ubyte
+        If t = 0 Then
+            fa = ATTR_FLOOR
+        Elseif t = 1 Then
+            fa = ATTR_FLOOR_BRIGHT
+        Else
+            fa = ATTR_FLOOR_MAG
+        End If
+        paint(c, 23, 1, 1, fa)
+    Next c
 End Sub
 
 ' ---------------------------------------------------------------
@@ -86,13 +105,33 @@ Sub paintRightColumn()
     ' wc 22..35       -> sky    (14 cols)
 
     Dim wc As Ubyte = worldCol Mod PIPE_PERIOD
+    Dim attribute As Ubyte = ATTR_PIPE_BRIGHT
+    Dim pipeLastCol As Ubyte = PIPE_WIDTH - 1
+
     If wc < PIPE_WIDTH Then
-        writePipeColumn(31, pipeGap(0))
-    Elseif wc >= PIPE_SPAWN_INTERVAL And wc < PIPE_SPAWN_INTERVAL + PIPE_WIDTH Then
-        writePipeColumn(31, pipeGap(1))
-    Else
-        writeSkyColumn(31)
+        If wc = pipeLastCol Then
+            attribute = ATTR_PIPE
+        End If
+
+        writePipeColumn(31, pipeGap(0), attribute)
+
+        Return
     End If
+
+    If wc >= PIPE_SPAWN_INTERVAL Then
+        If wc < PIPE_SPAWN_INTERVAL + PIPE_WIDTH Then
+            If wc - PIPE_SPAWN_INTERVAL = pipeLastCol Then
+                attribute = ATTR_PIPE
+            End If
+
+            writePipeColumn(31, pipeGap(1), attribute)
+            
+            Return
+        End If
+    End If
+    
+    
+    writeSkyColumn(31)
 End Sub
 
 Sub scroll()
