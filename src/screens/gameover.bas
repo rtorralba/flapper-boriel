@@ -10,5 +10,5 @@ Sub showGameOverScreen()
 
     waitForSpace()
 
-    showPlayGameScreen()
+    showPlayGameScreen(1)
 End Sub

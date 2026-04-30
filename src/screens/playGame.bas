@@ -1,7 +1,7 @@
 #include "playGameModule.bas"
 
-Sub showPlayGameScreen()
-    initGame()
+Sub showPlayGameScreen(clearScreen As Ubyte)
+    initGame(clearScreen)
     
     Do
         screenSync()

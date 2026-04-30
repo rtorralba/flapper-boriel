@@ -1,6 +1,9 @@
 ' Initialise all game variables
-Sub initGame()
-    Ink 0: Paper 1: Cls
+Sub initGame(clearScreen As Ubyte)
+    Ink 0: Paper 1
+    If clearScreen Then
+        Cls
+    End If
     
     mainCharacterX = MAIN_CHARACTER_INITIAL_X
     mainCharacterY = MAIN_CHARACTER_INITIAL_Y
@@ -29,7 +32,7 @@ Sub incrementScore()
     If score > hiScore Then
         hiScore = score
     End If
-
+    
     drawScore()
 End Sub
 
@@ -41,7 +44,7 @@ Sub checkScore()
     If worldCol < 28 Then Return
     
     Dim wc As Ubyte = worldCol Mod PIPE_PERIOD
-
+    
     If wc = 28 Then
         incrementScore()
         pipeGap(0) = 3 + (score Mod 12)

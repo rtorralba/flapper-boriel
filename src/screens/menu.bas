@@ -1,4 +1,6 @@
 Sub showMenuScreen()
+    initPlayfield()
+
     Print At 4,  7; Paper 0; Ink 0;             "                "
     Print At 5,  7; Paper 0; Ink 7;             " FLAPPER BORIEL "
     Print At 6,  7; Paper 0; Ink 0;             "                "
@@ -17,5 +19,9 @@ Sub showMenuScreen()
 
     waitForSpace()
 
-    showPlayGameScreen()
+    ' Clear menu box area (cols 7..22, rows 4..14)
+    clearBox(7, 4, 16, 10)
+    paint(7, 4, 16, 10, ATTR_SKY)
+
+    showPlayGameScreen(0)
 End Sub
