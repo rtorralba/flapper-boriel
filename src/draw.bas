@@ -114,10 +114,10 @@ End Sub
 
 ' Update score display in HUD
 Sub drawScore()
-    Print At 0, 6; Ink 6; Paper 0; score;
+    Print At 0, 6; Ink 6; Paper 0; zeroPad3(score);
 End Sub
 
 ' Update hi-score display in HUD
 Sub drawHiScore()
-    Print At 0, 13; Ink 5; Paper 0; hiScore; "  "
+    Print At 0, 13; Ink 5; Paper 0; zeroPad3(hiScore);
 End Sub
