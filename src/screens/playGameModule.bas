@@ -2,8 +2,8 @@
 Sub initGame()
     Ink 0: Paper 1: Cls
     
-    mainCharacterX = 6
-    mainCharacterY = 10
+    mainCharacterX = MAIN_CHARACTER_INITIAL_X
+    mainCharacterY = MAIN_CHARACTER_INITIAL_Y
     mainCharacterOldY = mainCharacterY
     birdVelQ = 8
     birdYAcc = 0

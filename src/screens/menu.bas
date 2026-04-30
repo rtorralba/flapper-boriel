@@ -11,9 +11,9 @@ Sub showMenuScreen()
     Print At 13, 7; Paper 0; Ink 5; Flash 1;    "  Press SPACE   "
     Print At 14, 7; Paper 0; Ink 0; Flash 0;    "                "
 
-    putChars(8, 18, 2, 2, @sprite0(0))
-    putChars(14, 16, 2, 2, @sprite0(0))
-    putChars(20, 18, 2, 2, @sprite0(0))
+    mainCharacterX = MAIN_CHARACTER_INITIAL_X
+    mainCharacterY = MAIN_CHARACTER_INITIAL_Y
+    drawMainCharacter()
 
     waitForSpace()
 
