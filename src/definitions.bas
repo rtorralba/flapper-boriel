@@ -1,5 +1,5 @@
-Const ATTR_SKY   As Ubyte = 14   ' Paper 1, Ink 1  = %00_001_110
-Const ATTR_PIPE  As Ubyte = 32  ' Paper 4, Ink 0  = %00_100_000
+Const ATTR_SKY   As Ubyte = 14  ' Paper 1, Ink 6  = %00_001_110
+Const ATTR_PIPE  As Ubyte = 38  ' Paper 4, Ink 6  = %00_100_110
 Const ATTR_FLOOR As Ubyte = 18  ' Paper 2, Ink 2  = %00_010_010
 ' Pipe state
 ' pipeGap(i): row of the gap top for pipe slot i

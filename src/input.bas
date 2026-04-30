@@ -1,13 +1,5 @@
-Function isSpacePressed() As Ubyte
-    If MultiKeys(KEYSPACE) Then
-        Return 1
-    End If
-    
-    Return 0
-End Function
-
 Sub readKeyboard()
-    If isSpacePressed() Then
+    If MultiKeys(KEYSPACE) Then
         birdVelQ = -7
         birdYAcc = 0
     End If
@@ -15,7 +7,7 @@ End Sub
 
 Sub waitForSpace()
     Do
-    Loop Until isSpacePressed()
+    Loop Until MultiKeys(KEYSPACE)
     Do
-    Loop While isSpacePressed()
+    Loop While MultiKeys(KEYSPACE)
 End Sub
