@@ -1,6 +1,6 @@
 Sub showMenuScreen()
     Print At 4,  7; Paper 0; Ink 0;             "                "
-    Print At 5,  7; Paper 0; Ink 7;             " BORIEL FLAPPER "
+    Print At 5,  7; Paper 0; Ink 7;             " FLAPPER BORIEL "
     Print At 6,  7; Paper 0; Ink 0;             "                "
     Print At 7,  7; Paper 0; Ink 6;             "    based on    "
     Print At 8,  7; Paper 0; Ink 6;             " ZX Moe Flapper "

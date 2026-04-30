@@ -109,7 +109,7 @@ Sub drawHUD()
     paint(0, 0, 32, 1, 7)  ' Paper 0 (black), Ink 7 (white) for full row
     Print At 0, 0; Ink 7; Paper 0; "SCORE:"
     Print At 0, 10; Ink 7; Paper 0; "HI:"
-    Print At 0, 18; Ink 7; Paper 0; "BORIEL FLAPPER"
+    Print At 0, 18; Ink 7; Paper 0; "FLAPPER BORIEL"
 End Sub
 
 ' Update score display in HUD
