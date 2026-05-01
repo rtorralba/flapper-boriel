@@ -1,14 +1,13 @@
-Function checkLimits(newY As Integer) As Integer
-    If newY < 1 Then
+Sub checkLimits()
+    If Int(birdYPos) < 1 Then
         birdYPos = 1.0
-        Return 1
+        Return
     End If
-    If newY > 21 Then
+    If Int(birdYPos) > 21 Then
         birdYPos = 22.0
-        Return 22
+        Return
     End If
-    Return newY
-End Function
+End Sub
 
 Function setNewSpeed() As Fixed
     birdVel = birdVel + BIRD_GRAVITY
@@ -20,5 +19,5 @@ Sub gravity()
 
     birdYPos = birdYPos + birdVel
 
-    checkLimits(Int(birdYPos))
+    checkLimits()
 End Sub
