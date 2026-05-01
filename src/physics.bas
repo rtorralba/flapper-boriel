@@ -1,3 +1,11 @@
+Sub gravity()
+    setNewSpeed()
+
+    birdYPos = birdYPos + birdVel
+
+    checkLimits()
+End Sub
+
 Sub checkLimits()
     If Int(birdYPos) < 1 Then
         birdYPos = 1.0
@@ -9,15 +17,7 @@ Sub checkLimits()
     End If
 End Sub
 
-Function setNewSpeed() As Fixed
+Sub setNewSpeed()
     birdVel = birdVel + BIRD_GRAVITY
     If birdVel > BIRD_MAX_VEL Then birdVel = BIRD_MAX_VEL
-End Function
-
-Sub gravity()
-    setNewSpeed()
-
-    birdYPos = birdYPos + birdVel
-
-    checkLimits()
 End Sub
