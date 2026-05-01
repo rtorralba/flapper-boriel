@@ -1,5 +1,5 @@
 ' ---------------------------------------------------------------
-' Check collision: bird overlaps a pipe attr (ATTR_PIPE = 0x20)
+' Check collision: bird overlaps a pipe attr (ATTR_PIPE_SHADOW = 0x20)
 ' Read directly from attr buffer for speed.
 ' ---------------------------------------------------------------
 Function checkBirdCollision(bx As Ubyte, by As Ubyte) As Ubyte
