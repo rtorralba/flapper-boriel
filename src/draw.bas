@@ -1,5 +1,3 @@
-' If move all attibutes at the same time, it produces a flickering at last column and the bird
-' MemMove($5821, $5820, 23 * 32 - 1)
 Sub scrollPlayfieldAttrs()
     Dim row As Ubyte
     Dim src As UInteger = $5821
