@@ -10,11 +10,13 @@ Function checkLimits(newY As Integer) As Integer
     Return newY
 End Function
 
-Sub gravity()
-    mainCharacterOldY = mainCharacterY
-
+Function setNewSpeed() As Fixed
     birdVel = birdVel + BIRD_GRAVITY
     If birdVel > BIRD_MAX_VEL Then birdVel = BIRD_MAX_VEL
+End Function
+
+Sub gravity()
+    setNewSpeed()
 
     birdYPos = birdYPos + birdVel
 

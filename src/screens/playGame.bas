@@ -7,6 +7,7 @@ Sub showPlayGameScreen(clearScreen As Ubyte)
         screenSync()
         
         readKeyboard()
+        preserveYPosition()
         gravity()
         scroll()
         redrawMainCharacter()
