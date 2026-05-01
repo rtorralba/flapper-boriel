@@ -12,13 +12,12 @@ Const PIPE_WIDTH As Ubyte = 5
 Const PIPE_SPAWN_INTERVAL As Ubyte = 18
 Const PIPE_PERIOD As Ubyte = 36  ' 2 * PIPE_SPAWN_INTERVAL
 
-Const MAIN_CHARACTER_INITIAL_X As Ubyte = 4
-Const MAIN_CHARACTER_INITIAL_Y As Ubyte = 10
+Const BIRD_INITIAL_X As Ubyte = 4
+Const BIRD_INITIAL_Y As Ubyte = 10
 
 ' Bird position (in 8px cells, range 0..31 X, 0..21 Y for 2-cell tall bird)
-Dim mainCharacterX As Ubyte
-Dim mainCharacterY As Ubyte
-Dim mainCharacterOldY As Ubyte
+Dim birdX    As Ubyte
+Dim birdOldY As Ubyte
 
 ' Blank 2x2 sprite (32 zero bytes) used to erase bird pixels without touching attrs
 Dim blankSprite(31) As Ubyte => {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0}

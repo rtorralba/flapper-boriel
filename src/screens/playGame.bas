@@ -10,10 +10,10 @@ Sub showPlayGameScreen(clearScreen As Ubyte)
         preserveYPosition()
         gravity()
         scroll()
-        redrawMainCharacter()
+        redrawBird()
         checkScore()
 
-        If checkBirdCollision(mainCharacterX, mainCharacterY) Then
+        If checkBirdCollision(birdX, Int(birdYPos)) Then
             showGameOverScreen()
         End If
     Loop

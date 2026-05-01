@@ -1,7 +1,6 @@
 Sub readKeyboard()
     If MultiKeys(KEYSPACE) Then
         birdVel = BIRD_JUMP_VEL
-        birdYPos = mainCharacterY
     End If
 End Sub
 

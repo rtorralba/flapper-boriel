@@ -11,5 +11,5 @@ Sub playScoreFX()
 End Sub
 
 Sub preserveYPosition()
-    mainCharacterOldY = mainCharacterY
+    birdOldY = Int(birdYPos)
 End Sub 

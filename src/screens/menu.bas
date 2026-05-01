@@ -13,9 +13,9 @@ Sub showMenuScreen()
     Print At 13, 7; Paper 0; Ink 5; Flash 1;    "  Press SPACE   "
     Print At 14, 7; Paper 0; Ink 0; Flash 0;    "                "
 
-    mainCharacterX = MAIN_CHARACTER_INITIAL_X
-    mainCharacterY = MAIN_CHARACTER_INITIAL_Y
-    drawMainCharacter()
+    birdX    = BIRD_INITIAL_X
+    birdYPos = BIRD_INITIAL_Y
+    drawBird()
 
     waitForSpace()
 

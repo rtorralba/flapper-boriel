@@ -20,5 +20,5 @@ Sub gravity()
 
     birdYPos = birdYPos + birdVel
 
-    mainCharacterY = checkLimits(Int(birdYPos))
+    checkLimits(Int(birdYPos))
 End Sub

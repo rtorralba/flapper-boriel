@@ -71,23 +71,23 @@ End Sub
 ' ---------------------------------------------------------------
 ' Draw the bird sprite at current position with correct attributes
 ' ---------------------------------------------------------------
-Sub drawMainCharacter()
+Sub drawBird()
     ' Only draw pixels - do NOT overwrite background attributes
     ' so collision detection can read pipe/sky attrs correctly.
-    putChars(mainCharacterX, mainCharacterY, 2, 2, @sprite0(0))
+    putChars(birdX, Int(birdYPos), 2, 2, @sprite0(0))
 End Sub
 
 ' ---------------------------------------------------------------
 ' Erase bird sprite at given position (restore sky attrs + blank pixels)
 ' ---------------------------------------------------------------
-Sub eraseMainCharacter(bx As Ubyte, by As Ubyte)
+Sub eraseBird(bx As Ubyte, by As Ubyte)
     ' Zero out pixels only - no Print, no paint: attrs stay intact
     putChars(bx, by, 2, 2, @blankSprite(0))
 End Sub
 
-Sub redrawMainCharacter()
-    eraseMainCharacter(mainCharacterX, mainCharacterOldY)
-    drawMainCharacter()
+Sub redrawBird()
+    eraseBird(birdX, birdOldY)
+    drawBird()
 End Sub
 
 ' ---------------------------------------------------------------

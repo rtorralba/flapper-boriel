@@ -5,11 +5,10 @@ Sub initGame(clearScreen As Ubyte)
         Cls
     End If
     
-    mainCharacterX = MAIN_CHARACTER_INITIAL_X
-    mainCharacterY = MAIN_CHARACTER_INITIAL_Y
-    mainCharacterOldY = mainCharacterY
-    birdVel = BIRD_INITIAL_VEL
-    birdYPos = MAIN_CHARACTER_INITIAL_Y
+    birdX    = BIRD_INITIAL_X
+    birdOldY = BIRD_INITIAL_Y
+    birdVel  = BIRD_INITIAL_VEL
+    birdYPos = BIRD_INITIAL_Y
     score = 0
     
     ' World column counter: counts how many columns have entered from the right.
@@ -20,7 +19,7 @@ Sub initGame(clearScreen As Ubyte)
     
     initPlayfield()
     drawHUD()
-    drawMainCharacter()
+    drawBird()
 End Sub
 
 Sub incrementScore()
