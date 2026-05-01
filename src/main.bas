@@ -1,7 +1,6 @@
 ' Libraries
 #include <putchars.bas>
 #include <retrace.bas>
-#include <keys.bas>
 #include <memcopy.bas>
 #include <clearbox.bas>
 

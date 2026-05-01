@@ -7,7 +7,7 @@ Function zeroPad3(n As UInteger) As String
 End Function
 
 Sub playScoreFX()
-    BEEP 0.05, 20
+    BEEP 0.005, 50
 End Sub
 
 Sub preserveYPosition()
