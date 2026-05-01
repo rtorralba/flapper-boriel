@@ -60,10 +60,7 @@ Sub scroll()
 End Sub
 
 Function floorAttr() As Ubyte
-    Dim t As Ubyte = worldCol Mod 3
-    If t = 0 Then Return ATTR_FLOOR
-    If t = 1 Then Return ATTR_FLOOR_BRIGHT
-    Return ATTR_FLOOR_MAG
+    Return attrFloorTable(worldCol Mod 3)
 End Function
 
 ' ---------------------------------------------------------------
