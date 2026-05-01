@@ -1,6 +1,5 @@
 ' ---------------------------------------------------------------
-' Check collision: bird overlaps a pipe attr (ATTR_PIPE_SHADOW = 0x20)
-' Read directly from attr buffer for speed.
+' Check collision: returns 1 if any of the 2x2 pixels at (bx, by) are not sky.
 ' ---------------------------------------------------------------
 Function checkBirdCollision(bx As Ubyte, by As Ubyte) As Ubyte
     Dim attrBuf(3) As Ubyte
