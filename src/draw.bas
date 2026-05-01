@@ -56,7 +56,6 @@ Sub paintLastColumn()
 End Sub
 
 Sub scroll()
-    ' --- Scroll + paint (worldCol increment is AFTER so scoring and paint use same value) ---
     scrollPlayfieldAttrs()
     paintLastColumn()
     worldCol = worldCol + 1
