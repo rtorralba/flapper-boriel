@@ -15,6 +15,8 @@ Const PIPE_PERIOD As Ubyte = 36  ' 2 * PIPE_SPAWN_INTERVAL
 Const BIRD_INITIAL_X As Ubyte = 4
 Const BIRD_INITIAL_Y As Ubyte = 10
 
+Dim attrFloorTable(2) As Ubyte => {ATTR_FLOOR, ATTR_FLOOR_BRIGHT, ATTR_FLOOR_MAG}
+
 ' Bird position (in 8px cells, range 0..31 X, 0..21 Y for 2-cell tall bird)
 Dim birdX    As Ubyte
 Dim birdOldY As Ubyte

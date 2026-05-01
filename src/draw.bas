@@ -48,7 +48,6 @@ Sub writeSkyColumn(col As Ubyte)
     paint(col, 1, 1, 22, ATTR_SKY)
     paint(col, 23, 1, 1, floorAttr())
 End Sub
-
 ' ---------------------------------------------------------------
 ' initPlayfield
 ' Clears play area pixels and attributes ready for a new game.
@@ -57,16 +56,7 @@ Sub initPlayfield()
     paint(0, 1, 32, 22, ATTR_SKY)
     Dim c As Ubyte
     For c = 0 To 31
-        Dim t As Ubyte = c Mod 3
-        Dim fa As Ubyte
-        If t = 0 Then
-            fa = ATTR_FLOOR
-        Elseif t = 1 Then
-            fa = ATTR_FLOOR_BRIGHT
-        Else
-            fa = ATTR_FLOOR_MAG
-        End If
-        paint(c, 23, 1, 1, fa)
+        paint(c, 23, 1, 1, attrFloorTable(c Mod 3))
     Next c
 End Sub
 
