@@ -8,8 +8,8 @@ Sub initGame(clearScreen As Ubyte)
     mainCharacterX = MAIN_CHARACTER_INITIAL_X
     mainCharacterY = MAIN_CHARACTER_INITIAL_Y
     mainCharacterOldY = mainCharacterY
-    birdVelQ = 8
-    birdYAcc = 0
+    birdVel = BIRD_INITIAL_VEL
+    birdYPos = MAIN_CHARACTER_INITIAL_Y
     score = 0
     
     ' World column counter: counts how many columns have entered from the right.
@@ -18,11 +18,9 @@ Sub initGame(clearScreen As Ubyte)
     pipeGap(0) = 5
     pipeGap(1) = 9
     
-    drawHUD()
     initPlayfield()
+    drawHUD()
     drawMainCharacter()
-    drawScore()
-    drawHiScore()
 End Sub
 
 Sub incrementScore()

@@ -23,9 +23,14 @@ Dim mainCharacterOldY As Ubyte
 ' Blank 2x2 sprite (32 zero bytes) used to erase bird pixels without touching attrs
 Dim blankSprite(31) As Ubyte => {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0}
 
-' Bird physics (fixed-point: velocity in 1/4 cell units)
-Dim birdVelQ As Integer   ' velocity * 4 (positive = down)
-Dim birdYAcc As Integer   ' sub-cell accumulator
+' Bird physics (fixed point: velocity in cells/frame)
+Const BIRD_GRAVITY     As Fixed = 0.30  ' acceleration per frame
+Const BIRD_MAX_VEL     As Fixed = 1.5   ' terminal velocity (cells/frame)
+Const BIRD_JUMP_VEL    As Fixed = -1.0  ' velocity applied on jump
+Const BIRD_INITIAL_VEL As Fixed = 0.25  ' velocity at game start
+
+Dim birdVel  As Fixed   ' velocity in cells/frame (positive = down)
+Dim birdYPos As Fixed   ' Y position as fixed point
 
 Dim pipeGap(1) As Ubyte
 

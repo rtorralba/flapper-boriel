@@ -149,6 +149,9 @@ Sub drawHUD()
     Print At 0, 0; Ink 7; Paper 0; "SCORE:"
     Print At 0, 10; Ink 7; Paper 0; "HI:"
     Print At 0, 18; Ink 7; Paper 0; "FLAPPER BORIEL"
+    
+    drawScore()
+    drawHiScore()
 End Sub
 
 ' Update score display in HUD

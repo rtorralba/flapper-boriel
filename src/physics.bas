@@ -1,19 +1,22 @@
-Sub gravity()
-    ' --- Physics ---
-    birdVelQ = birdVelQ + 2
-    If birdVelQ > 10 Then birdVelQ = 10
-    If birdVelQ > 0 And birdYAcc < 0 Then birdYAcc = 0
-    
-    mainCharacterOldY = mainCharacterY
-    
-    Dim newY As Integer
-    birdYAcc = birdYAcc + birdVelQ
-    Dim dy As Integer = birdYAcc / 4
-    birdYAcc = birdYAcc - dy * 4
-    newY = mainCharacterY + dy
-    If newY < 1 Then newY = 1
-    If newY > 21 Then
-        newY = 22
+Function checkLimits(newY As Integer) As Integer
+    If newY < 1 Then
+        birdYPos = 1.0
+        Return 1
     End If
-    mainCharacterY = newY
+    If newY > 21 Then
+        birdYPos = 22.0
+        Return 22
+    End If
+    Return newY
+End Function
+
+Sub gravity()
+    mainCharacterOldY = mainCharacterY
+
+    birdVel = birdVel + BIRD_GRAVITY
+    If birdVel > BIRD_MAX_VEL Then birdVel = BIRD_MAX_VEL
+
+    birdYPos = birdYPos + birdVel
+
+    mainCharacterY = checkLimits(Int(birdYPos))
 End Sub
