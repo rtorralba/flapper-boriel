@@ -78,6 +78,7 @@ Sub eraseBird(bx As Ubyte, by As Ubyte)
 End Sub
 
 Sub redrawBird()
+    waitretrace
     eraseBird(birdX, birdOldY)
     drawBird()
 End Sub
