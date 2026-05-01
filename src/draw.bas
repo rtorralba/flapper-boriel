@@ -97,7 +97,7 @@ End Sub
 ' Two pipes are interleaved: pipe0 starts at worldCol=0 phase,
 ' pipe1 is offset by PIPE_SPAWN_INTERVAL columns.
 ' ---------------------------------------------------------------
-Sub paintRightColumn()
+Sub paintLastColumn()
     ' period = 2 * PIPE_SPAWN_INTERVAL = 36
     ' wc 0..3         -> pipe0  (4 cols)
     ' wc 4..17        -> sky    (14 cols)
@@ -137,7 +137,7 @@ End Sub
 Sub scroll()
     ' --- Scroll + paint (worldCol increment is AFTER so scoring and paint use same value) ---
     scrollPlayfieldAttrs()
-    paintRightColumn()
+    paintLastColumn()
     worldCol = worldCol + 1
 End Sub
 
