@@ -1,7 +1,7 @@
 <!-- Narrative deep-dive: why this port matters and what I learned -->
 # Porting Flapper to Boriel BASIC — a short retrospective
 
-Porting a compact Sinclair BASIC toy to Boriel BASIC is a lesson in constraint translation: the gameplay ideas are tiny and clear, but timing, memory layout and a few helper primitives change how you implement them. I focused on three goals:
+Porting a compact Sinclair BASIC to Boriel BASIC is a lesson in constraint translation: the gameplay ideas are tiny and clear, but timing, memory layout and a few helper primitives change how you implement them. I focused on three goals:
 
 - preserve the original feel (timing, pipe rhythm)
 - keep code modular and readable for learners
