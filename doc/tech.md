@@ -54,8 +54,6 @@ Boriel timings required a pragmatic tweak: the Boriel build in this repo is slow
 - Use attribute-based collision on systems with character/attribute layers; it's often simpler and faster.
 - Tune constants last — most porting bugs are timing-related, not algorithmic.
 
----
-Generated for a short blog-style post; the next section contains compact code examples you can drop into the repo.
 
 ## Code examples
 
