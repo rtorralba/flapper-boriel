@@ -167,3 +167,5 @@ Note: drawing only writes pixel bytes; attributes are preserved for correct coll
 ## More information
 
 For more information: [github.com/rtorralba/flapper-boriel](https://github.com/rtorralba/flapper-boriel)
+
+[Download the game](https://juntelart.itch.io/flapper-boriel)
