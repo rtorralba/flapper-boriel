@@ -1,3 +1,7 @@
+' Implementation detail: shift attribute bytes row-by-row to avoid transient garbage
+' when the source and destination memory ranges overlap during the shift.
+ ' We perform a `MemMove` per row (32-byte stride) rather than a single large
+ ' block move so the right-most column never shows leftover bytes during the copy.
 Sub scrollPlayfieldAttrs()
     Dim row As Ubyte
     Dim src As UInteger = $5821

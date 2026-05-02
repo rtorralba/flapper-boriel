@@ -1,4 +1,3 @@
-<!-- Narrative deep-dive: why this port matters and what I learned -->
 # Porting Flapper to Boriel BASIC — a short retrospective
 
 Porting a compact Sinclair BASIC to Boriel BASIC is a lesson in constraint translation: the gameplay ideas are tiny and clear, but timing, memory layout and a few helper primitives change how you implement them. I focused on three goals:
@@ -99,6 +98,8 @@ End Function
 Collision is computed by reading the 2×2 attribute bytes at the bird's tile and checking for anything different than `ATTR_SKY`.
 
 ### World scroll (attributes + last column)
+
+Implementation detail: when scrolling the playfield we shift attribute bytes row-by-row (using `MemMove` per row) instead of moving the whole attribute memory at once. Doing the move per row avoids transient "garbage" appearing in the right-most column due to overlapping memory regions during the shift.
 
 ```bas
 Sub scrollPlayfieldAttrs()
