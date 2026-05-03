@@ -6,7 +6,7 @@ Sub scrollPlayfieldAttrs()
     Dim row As Ubyte
     Dim src As UInteger = $5821
     Dim dst As UInteger = $5820
-    For row = 0 To 23
+    For row = 0 To 21
         MemMove(src, dst, 31)
         src = src + 32
         dst = dst + 32
@@ -61,10 +61,18 @@ Sub scroll()
     scrollPlayfieldAttrs()
     paintLastColumn()
     worldCol = worldCol + 1
+    paintFloorAttrs()
+    ' drawFloorPixels()
 End Sub
 
-Function floorAttr() As Ubyte
-    Return attrFloorTable(worldCol Mod 3)
+Function floorAttr(col As Ubyte) As Ubyte
+    Dim worldStep As Ubyte = worldCol / 2
+    Dim idx As Ubyte = (col + worldStep) Mod 3
+    If (worldCol Mod 2) = 0 Then
+        Return attrFloorFullTable(idx)
+    Else
+        Return attrFloorHalfTable(idx)
+    End If
 End Function
 
 ' ---------------------------------------------------------------
@@ -86,7 +94,7 @@ Sub writePipeColumn(col As Ubyte, gap As Ubyte, attr As Ubyte)
     If pipeLow > 0 Then
         paint(col, gap + PIPE_GAP_SIZE + 1, 1, pipeLow, attr)
     End If
-    paint(col, 23, 1, 1, floorAttr())
+    paint(col, 23, 1, 1, floorAttr(col))
 End Sub
 
 ' ---------------------------------------------------------------
@@ -95,18 +103,37 @@ End Sub
 ' ---------------------------------------------------------------
 Sub writeSkyColumn(col As Ubyte)
     paint(col, 1, 1, 22, ATTR_SKY)
-    paint(col, 23, 1, 1, floorAttr())
+    paint(col, 23, 1, 1, floorAttr(col))
 End Sub
+Sub drawFloorPixels()
+    Dim c As Ubyte
+    For c = 0 To 31
+        putChars(c, 23, 1, 1, @halfTile(0))
+    Next c
+End Sub
+
+Sub paintFloorAttrs()
+    Dim c As Ubyte
+    Dim worldStep As Ubyte = worldCol / 2
+    Dim idx As Ubyte
+    For c = 0 To 31
+        idx = (c + worldStep) Mod 3
+        If (worldCol Mod 2) = 0 Then
+            paint(c, 23, 1, 1, attrFloorFullTable(idx))
+        Else
+            paint(c, 23, 1, 1, attrFloorHalfTable(idx))
+        End If
+    Next c
+End Sub
+
 ' ---------------------------------------------------------------
 ' initPlayfield
 ' Clears play area pixels and attributes ready for a new game.
 ' ---------------------------------------------------------------
 Sub initPlayfield()
     paint(0, 1, 32, 22, ATTR_SKY)
-    Dim c As Ubyte
-    For c = 0 To 31
-        paint(c, 23, 1, 1, attrFloorTable(c Mod 3))
-    Next c
+    drawFloorPixels()
+    paintFloorAttrs()
 End Sub
 
 ' ---------------------------------------------------------------

@@ -12,4 +12,4 @@ End Sub
 
 Sub preserveYPosition()
     birdOldY = Int(birdYPos)
-End Sub 
+End Sub

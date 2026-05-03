@@ -16,5 +16,6 @@ Sub showPlayGameScreen(clearScreen As Ubyte)
         If checkBirdCollision(birdX, Int(birdYPos)) Then
             showGameOverScreen()
         End If
+        ' waitAnyKey()
     Loop
 End Sub

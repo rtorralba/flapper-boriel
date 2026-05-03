@@ -2,11 +2,15 @@ Const ATTR_SKY          As Ubyte = 14   ' Paper 1, Ink 6        = %00_001_110
 Const ATTR_PIPE         As Ubyte = 102 ' Paper 4, Ink 6, bright = %01_100_110
 Const ATTR_PIPE_SHADOW  As Ubyte = 38   ' Paper 4, Ink 6, matte = %00_100_110
 
-Const ATTR_FLOOR        As Ubyte = 18  ' Paper 2, Ink 2, matte  = %00_010_010
-Const ATTR_FLOOR_BRIGHT As Ubyte = 82  ' Paper 2, Ink 2, bright = %01_010_010
-Const ATTR_FLOOR_MAG    As Ubyte = 91  ' Paper 3, Ink 3, bright = %01_011_011
+Const ATTR_FLOOR_0 As Ubyte = 18  ' Ink 2, Paper 2, matte red/red
+Const ATTR_FLOOR_0_HALF As Ubyte = 26  ' Ink 2, Paper 3, matte red/magenta
+Const ATTR_FLOOR_1 As Ubyte = 27  ' Ink 3, Paper 3, matte magenta/magenta
+Const ATTR_FLOOR_1_HALF As Ubyte = 51  ' Ink 3, Paper 6, matte magenta/yellow
+Const ATTR_FLOOR_2 As Ubyte = 54  ' Ink 6, Paper 6, matte yellow/yellow
+Const ATTR_FLOOR_2_HALF As Ubyte = 22  ' Ink 6, Paper 2, matte yellow/red
 
-Dim attrFloorTable(2) As Ubyte => {ATTR_FLOOR, ATTR_FLOOR_BRIGHT, ATTR_FLOOR_MAG}
+Dim attrFloorFullTable(2) As Ubyte => {ATTR_FLOOR_0, ATTR_FLOOR_1, ATTR_FLOOR_2}
+Dim attrFloorHalfTable(2) As Ubyte => {ATTR_FLOOR_0_HALF, ATTR_FLOOR_1_HALF, ATTR_FLOOR_2_HALF}
 
 ' Pipe state
 ' pipeGap(i): row of the gap top for pipe slot i
@@ -25,6 +29,11 @@ Dim birdOldY As Ubyte
 
 ' Blank 2x2 sprite (32 zero bytes) used to erase bird pixels without touching attrs
 Dim blankSprite(31) As Ubyte => {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0}
+
+' Half-block tile: left 4 pixels ON ($F0) on every scanline — used for half-char drawing
+Dim halfTile(7) As Ubyte => {$F0,$F0,$F0,$F0,$F0,$F0,$F0,$F0}
+
+Dim currentFloorTile As Integer
 
 ' Bird physics (fixed point: velocity in cells/frame)
 Const BIRD_GRAVITY     As Fixed = 0.30  ' acceleration per frame
