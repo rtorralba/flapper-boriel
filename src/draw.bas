@@ -24,7 +24,7 @@ Sub updatePipes()
         pipeX(1) = 32
         pipeGap(1) = nextPipeGap(1)
     End If
-
+    
     For i = 0 To 1
         If pipeActive(i) Then
             pX = pipeX(i)
@@ -61,9 +61,11 @@ Sub updatePipes()
 End Sub
 
 Sub scroll()
+    waitretrace
     updatePipes()
-    worldCol = worldCol + 1
+    waitretrace
     paintFloorAttrs()
+    worldCol = worldCol + 1
     ' drawFloorPixels()
 End Sub
 
@@ -90,15 +92,15 @@ End Function
 Sub writePipeColumn(col As Ubyte, gap As Ubyte, attr As Ubyte)
     Dim r As Ubyte
     If gap > 0 Then
-        paint(col, 1, 1, gap, attr)
         For r = 1 To gap
+            paint(col, r, 1, 1, attr)
             putChars(col, r, 1, 1, @halfTile(0))
         Next r
     End If
     Dim pipeLow As Ubyte = 22 - gap - PIPE_GAP_SIZE
     If pipeLow > 0 Then
-        paint(col, gap + PIPE_GAP_SIZE + 1, 1, pipeLow, attr)
         For r = gap + PIPE_GAP_SIZE + 1 To 22
+            paint(col, r, 1, 1, attr)
             putChars(col, r, 1, 1, @halfTile(0))
         Next r
     End If
@@ -113,16 +115,16 @@ End Sub
 Sub erasePipeColumn(col As Ubyte, gap As Ubyte)
     Dim r As Ubyte
     If gap > 0 Then
-        paint(col, 1, 1, gap, ATTR_SKY)
         For r = 1 To gap
             putChars(col, r, 1, 1, @emptyTile(0))
+            paint(col, r, 1, 1, ATTR_SKY)
         Next r
     End If
     Dim pipeLow As Ubyte = 22 - gap - PIPE_GAP_SIZE
     If pipeLow > 0 Then
-        paint(col, gap + PIPE_GAP_SIZE + 1, 1, pipeLow, ATTR_SKY)
         For r = gap + PIPE_GAP_SIZE + 1 To 22
             putChars(col, r, 1, 1, @emptyTile(0))
+            paint(col, r, 1, 1, ATTR_SKY)
         Next r
     End If
     paint(col, 23, 1, 1, floorAttr(col))

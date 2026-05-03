@@ -9,7 +9,7 @@ Sub showPlayGameScreen(clearScreen As Ubyte)
         readKeyboard()
         preserveYPosition()
         gravity()
-        waitretrace
+        ' waitretrace
         scroll()
         redrawBird()
         checkScore()
