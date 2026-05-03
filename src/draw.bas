@@ -28,32 +28,14 @@ Sub paintLastColumn()
     ' wc 22..35       -> sky    (14 cols)
 
     Dim wc As Ubyte = worldCol Mod PIPE_PERIOD
-    Dim attribute As Ubyte = ATTR_PIPE
-    Dim pipeLastCol As Ubyte = PIPE_WIDTH - 1
-
     If wc < PIPE_WIDTH Then
-        If wc = pipeLastCol Then
-            attribute = ATTR_PIPE_SHADOW
-        End If
-
-        writePipeColumn(31, pipeGap(0), attribute)
-
+        writePipeColumn(31, pipeGap(0), ATTR_PIPE)
         Return
     End If
-
-    If wc >= PIPE_SPAWN_INTERVAL Then
-        If wc < PIPE_SPAWN_INTERVAL + PIPE_WIDTH Then
-            If wc - PIPE_SPAWN_INTERVAL = pipeLastCol Then
-                attribute = ATTR_PIPE_SHADOW
-            End If
-
-            writePipeColumn(31, pipeGap(1), attribute)
-            
-            Return
-        End If
+    If wc >= PIPE_SPAWN_INTERVAL And wc < PIPE_SPAWN_INTERVAL + PIPE_WIDTH Then
+        writePipeColumn(31, pipeGap(1), ATTR_PIPE)
+        Return
     End If
-    
-    
     writeSkyColumn(31)
 End Sub
 
@@ -80,9 +62,9 @@ End Function
 ' Writes attribute bytes for a single column at col (0..31)
 ' in the play area (rows 0..20) using direct POKE to the
 ' currently mapped attribute buffer.
-' Rows 0..gap-1        -> ATTR_PIPE_SHADOW
 ' Rows gap..gap+GAP-1  -> ATTR_SKY
-' Rows gap+GAP..19     -> ATTR_PIPE_SHADOW
+' Rows 0..gap-1        -> ATTR_PIPE
+' Rows gap+GAP..19     -> ATTR_PIPE
 ' Row 20               -> ATTR_FLOOR
 ' ---------------------------------------------------------------
 Sub writePipeColumn(col As Ubyte, gap As Ubyte, attr As Ubyte)
@@ -105,6 +87,7 @@ Sub writeSkyColumn(col As Ubyte)
     paint(col, 1, 1, 22, ATTR_SKY)
     paint(col, 23, 1, 1, floorAttr(col))
 End Sub
+
 Sub drawFloorPixels()
     Dim c As Ubyte
     For c = 0 To 31

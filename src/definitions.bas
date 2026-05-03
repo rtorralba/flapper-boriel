@@ -1,6 +1,5 @@
-Const ATTR_SKY          As Ubyte = 14   ' Paper 1, Ink 6        = %00_001_110
-Const ATTR_PIPE         As Ubyte = 102 ' Paper 4, Ink 6, bright = %01_100_110
-Const ATTR_PIPE_SHADOW  As Ubyte = 38   ' Paper 4, Ink 6, matte = %00_100_110
+Const ATTR_SKY          As Ubyte = 14
+Const ATTR_PIPE         As Ubyte = 36
 
 Const ATTR_FLOOR_0 As Ubyte = 18  ' Ink 2, Paper 2, matte red/red
 Const ATTR_FLOOR_0_HALF As Ubyte = 26  ' Ink 2, Paper 3, matte red/magenta
