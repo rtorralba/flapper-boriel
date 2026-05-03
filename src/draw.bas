@@ -1,47 +1,67 @@
-' Implementation detail: shift attribute bytes row-by-row to avoid transient garbage
-' when the source and destination memory ranges overlap during the shift.
- ' We perform a `MemMove` per row (32-byte stride) rather than a single large
- ' block move so the right-most column never shows leftover bytes during the copy.
-Sub scrollPlayfieldAttrs()
-    Dim row As Ubyte
-    Dim src As UInteger = $5821
-    Dim dst As UInteger = $5820
-    For row = 0 To 21
-        MemMove(src, dst, 31)
-        src = src + 32
-        dst = dst + 32
-    Next row
-End Sub
-
-' ---------------------------------------------------------------
-' Determine what to draw in column 31 given current worldCol.
-' Each pipe slot covers PIPE_WIDTH + PIPE_SPAWN_INTERVAL columns.
-' Within that window: cols 0..PIPE_WIDTH-1 are pipe, rest is sky.
-' Two pipes are interleaved: pipe0 starts at worldCol=0 phase,
-' pipe1 is offset by PIPE_SPAWN_INTERVAL columns.
-' ---------------------------------------------------------------
-Sub paintLastColumn()
-    ' period = 2 * PIPE_SPAWN_INTERVAL = 36
-    ' wc 0..3         -> pipe0  (4 cols)
-    ' wc 4..17        -> sky    (14 cols)
-    ' wc 18..21       -> pipe1  (4 cols)
-    ' wc 22..35       -> sky    (14 cols)
-
-    Dim wc As Ubyte = worldCol Mod PIPE_PERIOD
-    If wc < PIPE_WIDTH Then
-        writePipeColumn(31, pipeGap(0), ATTR_PIPE)
-        Return
+' implementation detail: pipe movement logic is updated manually by drawing only the edges
+Sub updatePipes()
+    Dim i As Ubyte
+    Dim pX As Integer
+    Dim gap As Ubyte
+    Dim leadingCol As Integer
+    Dim trailingCol As Integer
+    
+    Dim wc As UInteger = worldCol Mod PIPE_PERIOD
+    
+    If wc = 0 Then
+        If pipeActive(0) And pipeX(0) > -PIPE_WIDTH Then
+            writeSkyColumn(pipeX(0) + PIPE_WIDTH - 1)
+        End If
+        pipeActive(0) = 1
+        pipeX(0) = 32
+        pipeGap(0) = nextPipeGap(0)
     End If
-    If wc >= PIPE_SPAWN_INTERVAL And wc < PIPE_SPAWN_INTERVAL + PIPE_WIDTH Then
-        writePipeColumn(31, pipeGap(1), ATTR_PIPE)
-        Return
+    If wc = PIPE_SPAWN_INTERVAL Then
+        If pipeActive(1) And pipeX(1) > -PIPE_WIDTH Then
+            writeSkyColumn(pipeX(1) + PIPE_WIDTH - 1)
+        End If
+        pipeActive(1) = 1
+        pipeX(1) = 32
+        pipeGap(1) = nextPipeGap(1)
     End If
-    writeSkyColumn(31)
+
+    For i = 0 To 1
+        If pipeActive(i) Then
+            pX = pipeX(i)
+            gap = pipeGap(i)
+            
+            leadingCol = pX - 1
+            trailingCol = pX + PIPE_WIDTH - 1
+            
+            If (worldCol Mod 2) = 1 Then
+                ' Odd frame: half tiles
+                If leadingCol >= 0 And leadingCol <= 31 Then
+                    writePipeColumn(leadingCol, gap, ATTR_FIRST_HALF)
+                End If
+                If trailingCol >= 0 And trailingCol <= 31 Then
+                    writePipeColumn(trailingCol, gap, ATTR_LAST_HALF)
+                End If
+            Else
+                ' Even frame: full tiles
+                If leadingCol >= 0 And leadingCol <= 31 Then
+                    writePipeColumn(leadingCol, gap, ATTR_PIPE)
+                End If
+                If trailingCol >= 0 And trailingCol <= 31 Then
+                    writeSkyColumn(trailingCol)
+                End If
+                
+                pipeX(i) = pX - 1
+                
+                If pipeX(i) < -PIPE_WIDTH Then
+                    pipeActive(i) = 0
+                End If
+            End If
+        End If
+    Next i
 End Sub
 
 Sub scroll()
-    scrollPlayfieldAttrs()
-    paintLastColumn()
+    updatePipes()
     worldCol = worldCol + 1
     paintFloorAttrs()
     ' drawFloorPixels()
@@ -68,13 +88,23 @@ End Function
 ' Row 20               -> ATTR_FLOOR
 ' ---------------------------------------------------------------
 Sub writePipeColumn(col As Ubyte, gap As Ubyte, attr As Ubyte)
+    Dim r As Ubyte
     If gap > 0 Then
         paint(col, 1, 1, gap, attr)
+        For r = 1 To gap
+            putChars(col, r, 1, 1, @halfTile(0))
+        Next r
     End If
     paint(col, gap + 1, 1, PIPE_GAP_SIZE, ATTR_SKY)
+    For r = gap + 1 To gap + PIPE_GAP_SIZE
+        putChars(col, r, 1, 1, @emptyTile(0))
+    Next r
     Dim pipeLow As Ubyte = 22 - gap - PIPE_GAP_SIZE
     If pipeLow > 0 Then
         paint(col, gap + PIPE_GAP_SIZE + 1, 1, pipeLow, attr)
+        For r = gap + PIPE_GAP_SIZE + 1 To 22
+            putChars(col, r, 1, 1, @halfTile(0))
+        Next r
     End If
     paint(col, 23, 1, 1, floorAttr(col))
 End Sub
@@ -84,7 +114,11 @@ End Sub
 ' Fills column col with sky attr for rows 0..19, floor at row 20.
 ' ---------------------------------------------------------------
 Sub writeSkyColumn(col As Ubyte)
+    Dim r As Ubyte
     paint(col, 1, 1, 22, ATTR_SKY)
+    For r = 1 To 22
+        putChars(col, r, 1, 1, @emptyTile(0))
+    Next r
     paint(col, 23, 1, 1, floorAttr(col))
 End Sub
 

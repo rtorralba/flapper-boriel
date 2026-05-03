@@ -14,8 +14,14 @@ Sub initGame(clearScreen As Ubyte)
     ' World column counter: counts how many columns have entered from the right.
     ' Col 31 shows worldCol mod (PIPE_SPAWN_INTERVAL + PIPE_WIDTH) for each pipe slot.
     worldCol = 0
+    pipeActive(0) = 0
+    pipeActive(1) = 0
+    pipeX(0) = 32
+    pipeX(1) = 32
     pipeGap(0) = 5
     pipeGap(1) = 9
+    nextPipeGap(0) = 5
+    nextPipeGap(1) = 9
     
     initPlayfield()
     drawHUD()
@@ -37,26 +43,19 @@ End Sub
 ' pipe0 trailing col (wc=3) painted at worldCol=3, reaches col6 at worldCol=28  -> wc=28%36=28
 ' pipe1 trailing col (wc=21) painted at worldCol=21, reaches col6 at worldCol=46 -> wc=46%36=10
 Sub checkScore()
-    ' First pipe is not present for easy play
-    If worldCol < 28 Then Return
-    
-    Dim wc As Ubyte = worldCol Mod PIPE_PERIOD
-    
-    If wc = 28 Then
+    If pipeActive(0) And pipeX(0) = birdX And (worldCol Mod 2) = 0 Then
         incrementScore()
-        pipeGap(0) = 3 + (score Mod 12)
-        Return
+        nextPipeGap(0) = 3 + (score Mod 12)
     End If
     
-    If wc = 10 Then
+    If pipeActive(1) And pipeX(1) = birdX And (worldCol Mod 2) = 0 Then
         incrementScore()
-        pipeGap(1) = 3 + ((score + 5) Mod 12)
-        Return
+        nextPipeGap(1) = 3 + ((score + 5) Mod 12)
     End If
 End Sub
 
 Sub screenSync()
-    waitretrace
-    waitretrace
+    ' waitretrace
+    ' waitretrace
     waitretrace
 End Sub

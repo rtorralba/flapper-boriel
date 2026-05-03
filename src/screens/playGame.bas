@@ -12,7 +12,7 @@ Sub showPlayGameScreen(clearScreen As Ubyte)
         scroll()
         redrawBird()
         checkScore()
-
+        
         If checkBirdCollision(birdX, Int(birdYPos)) Then
             showGameOverScreen()
         End If

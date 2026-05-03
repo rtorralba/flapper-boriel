@@ -1,5 +1,7 @@
 Const ATTR_SKY          As Ubyte = 14
 Const ATTR_PIPE         As Ubyte = 36
+Const ATTR_FIRST_HALF   As Ubyte = 33
+Const ATTR_LAST_HALF    As Ubyte = 12
 
 Const ATTR_FLOOR_0 As Ubyte = 18  ' Ink 2, Paper 2, matte red/red
 Const ATTR_FLOOR_0_HALF As Ubyte = 26  ' Ink 2, Paper 3, matte red/magenta
@@ -16,8 +18,8 @@ Dim attrFloorHalfTable(2) As Ubyte => {ATTR_FLOOR_0_HALF, ATTR_FLOOR_1_HALF, ATT
 Const NUM_PIPES As Ubyte = 2
 Const PIPE_GAP_SIZE As Ubyte = 6
 Const PIPE_WIDTH As Ubyte = 5
-Const PIPE_SPAWN_INTERVAL As Ubyte = 18
-Const PIPE_PERIOD As Ubyte = 36  ' 2 * PIPE_SPAWN_INTERVAL
+Const PIPE_SPAWN_INTERVAL As Ubyte = 36
+Const PIPE_PERIOD As Ubyte = 72  ' 2 * PIPE_SPAWN_INTERVAL
 
 Const BIRD_INITIAL_X As Ubyte = 4
 Const BIRD_INITIAL_Y As Ubyte = 10
@@ -31,6 +33,7 @@ Dim blankSprite(31) As Ubyte => {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0
 
 ' Half-block tile: left 4 pixels ON ($F0) on every scanline — used for half-char drawing
 Dim halfTile(7) As Ubyte => {$F0,$F0,$F0,$F0,$F0,$F0,$F0,$F0}
+Dim emptyTile(7) As Ubyte => {0,0,0,0,0,0,0,0}
 
 Dim currentFloorTile As Integer
 
@@ -44,6 +47,9 @@ Dim birdVel  As Fixed   ' velocity in cells/frame (positive = down)
 Dim birdYPos As Fixed   ' Y position as fixed point
 
 Dim pipeGap(1) As Ubyte
+Dim nextPipeGap(1) As Ubyte
+Dim pipeX(1) As Integer
+Dim pipeActive(1) As Ubyte
 
 ' World scroll counter: how many columns have entered from the right
 Dim worldCol As UInteger
