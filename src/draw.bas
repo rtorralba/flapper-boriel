@@ -10,7 +10,7 @@ Sub updatePipes()
     
     If wc = 0 Then
         If pipeActive(0) And pipeX(0) > -PIPE_WIDTH Then
-            writeSkyColumn(pipeX(0) + PIPE_WIDTH - 1)
+            erasePipeColumn(pipeX(0) + PIPE_WIDTH - 1, pipeGap(0))
         End If
         pipeActive(0) = 1
         pipeX(0) = 32
@@ -18,7 +18,7 @@ Sub updatePipes()
     End If
     If wc = PIPE_SPAWN_INTERVAL Then
         If pipeActive(1) And pipeX(1) > -PIPE_WIDTH Then
-            writeSkyColumn(pipeX(1) + PIPE_WIDTH - 1)
+            erasePipeColumn(pipeX(1) + PIPE_WIDTH - 1, pipeGap(1))
         End If
         pipeActive(1) = 1
         pipeX(1) = 32
@@ -47,7 +47,7 @@ Sub updatePipes()
                     writePipeColumn(leadingCol, gap, ATTR_PIPE)
                 End If
                 If trailingCol >= 0 And trailingCol <= 31 Then
-                    writeSkyColumn(trailingCol)
+                    erasePipeColumn(trailingCol, gap)
                 End If
                 
                 pipeX(i) = pX - 1
@@ -95,10 +95,6 @@ Sub writePipeColumn(col As Ubyte, gap As Ubyte, attr As Ubyte)
             putChars(col, r, 1, 1, @halfTile(0))
         Next r
     End If
-    paint(col, gap + 1, 1, PIPE_GAP_SIZE, ATTR_SKY)
-    For r = gap + 1 To gap + PIPE_GAP_SIZE
-        putChars(col, r, 1, 1, @emptyTile(0))
-    Next r
     Dim pipeLow As Ubyte = 22 - gap - PIPE_GAP_SIZE
     If pipeLow > 0 Then
         paint(col, gap + PIPE_GAP_SIZE + 1, 1, pipeLow, attr)
@@ -110,15 +106,25 @@ Sub writePipeColumn(col As Ubyte, gap As Ubyte, attr As Ubyte)
 End Sub
 
 ' ---------------------------------------------------------------
-' writeSkyColumn col
-' Fills column col with sky attr for rows 0..19, floor at row 20.
+' erasePipeColumn col, gap
+' Clears the pipe attribute and pixels for the given column,
+' leaving the gap untouched.
 ' ---------------------------------------------------------------
-Sub writeSkyColumn(col As Ubyte)
+Sub erasePipeColumn(col As Ubyte, gap As Ubyte)
     Dim r As Ubyte
-    paint(col, 1, 1, 22, ATTR_SKY)
-    For r = 1 To 22
-        putChars(col, r, 1, 1, @emptyTile(0))
-    Next r
+    If gap > 0 Then
+        paint(col, 1, 1, gap, ATTR_SKY)
+        For r = 1 To gap
+            putChars(col, r, 1, 1, @emptyTile(0))
+        Next r
+    End If
+    Dim pipeLow As Ubyte = 22 - gap - PIPE_GAP_SIZE
+    If pipeLow > 0 Then
+        paint(col, gap + PIPE_GAP_SIZE + 1, 1, pipeLow, ATTR_SKY)
+        For r = gap + PIPE_GAP_SIZE + 1 To 22
+            putChars(col, r, 1, 1, @emptyTile(0))
+        Next r
+    End If
     paint(col, 23, 1, 1, floorAttr(col))
 End Sub
 
@@ -171,7 +177,7 @@ Sub eraseBird(bx As Ubyte, by As Ubyte)
 End Sub
 
 Sub redrawBird()
-    waitretrace
+    ' waitretrace
     eraseBird(birdX, birdOldY)
     drawBird()
 End Sub
