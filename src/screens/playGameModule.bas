@@ -55,7 +55,7 @@ Sub checkScore()
 End Sub
 
 Sub screenSync()
-    ' waitretrace
+    waitretrace
     ' waitretrace
     ' waitretrace
 End Sub
