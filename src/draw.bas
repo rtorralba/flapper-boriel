@@ -35,25 +35,37 @@ Sub updatePipes()
         attrBack = ATTR_SKY
     End If
     
+    ' Pase 1: Dibujar TODAS las partes de ARRIBA primero (para ganar al haz de luz de la TV)
     For i = 0 To 1
         If Not pipeActive(i) Then Continue For
-        
         pX = pipeX(i)
         gap = pipeGap(i)
-        
         leadingCol = pX - 1
         trailingCol = pX + PIPE_WIDTH - 1
         
         If leadingCol >= 0 Then
-            If leadingCol <= 31 Then
-                writePipeColumn(leadingCol, gap, attrFront)
-            End If
+            If leadingCol <= 31 Then writePipeTop(leadingCol, gap, attrFront)
         End If
         
         If trailingCol >= 0 Then
-            If trailingCol <= 31 Then
-                writePipeColumn(trailingCol, gap, attrBack)
-            End If
+            If trailingCol <= 31 Then writePipeTop(trailingCol, gap, attrBack)
+        End If
+    Next i
+    
+    ' Pase 2: Dibujar TODAS las partes de ABAJO después (el haz ya va más abajo, es seguro)
+    For i = 0 To 1
+        If Not pipeActive(i) Then Continue For
+        pX = pipeX(i)
+        gap = pipeGap(i)
+        leadingCol = pX - 1
+        trailingCol = pX + PIPE_WIDTH - 1
+        
+        If leadingCol >= 0 Then
+            If leadingCol <= 31 Then writePipeBottom(leadingCol, gap, attrFront)
+        End If
+        
+        If trailingCol >= 0 Then
+            If trailingCol <= 31 Then writePipeBottom(trailingCol, gap, attrBack)
         End If
         
         If (worldCol bAnd 1) = 0 Then
@@ -87,17 +99,23 @@ End Function
 ' Rows gap+GAP..19     -> attr
 ' Row 20               -> ATTR_FLOOR
 ' ---------------------------------------------------------------
-Sub writePipeColumn(col As Ubyte, gap As Ubyte, attr As Ubyte)
+Sub writePipeTop(col As Ubyte, gap As Ubyte, attr As Ubyte)
     If gap > 0 Then
         paint(col, 1, 1, gap, attr)
     End If
-    
+End Sub
+
+Sub writePipeBottom(col As Ubyte, gap As Ubyte, attr As Ubyte)
     Dim pipeLow As Ubyte = 22 - gap - PIPE_GAP_SIZE
     If pipeLow > 0 Then
         paint(col, gap + PIPE_GAP_SIZE + 1, 1, pipeLow, attr)
     End If
-    
     paint(col, 23, 1, 1, floorAttr(col))
+End Sub
+
+Sub writePipeColumn(col As Ubyte, gap As Ubyte, attr As Ubyte)
+    writePipeTop(col, gap, attr)
+    writePipeBottom(col, gap, attr)
 End Sub
 
 Sub drawPlayfieldPixels()
