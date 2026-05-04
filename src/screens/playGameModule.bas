@@ -55,7 +55,10 @@ Sub checkScore()
 End Sub
 
 Sub screenSync()
-    waitretrace
+    If score < 10 Then
+        ' At low score, run at half speed to give player more time to react
+        waitretrace
+    End If
     ' waitretrace
     ' waitretrace
 End Sub
