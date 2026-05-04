@@ -10,8 +10,15 @@ Const ATTR_FLOOR_1_HALF As Ubyte = 51  ' Ink 3, Paper 6, matte magenta/yellow
 Const ATTR_FLOOR_2 As Ubyte = 54  ' Ink 6, Paper 6, matte yellow/yellow
 Const ATTR_FLOOR_2_HALF As Ubyte = 22  ' Ink 6, Paper 2, matte yellow/red
 
-Dim attrFloorFullTable(2) As Ubyte => {ATTR_FLOOR_0, ATTR_FLOOR_1, ATTR_FLOOR_2}
-Dim attrFloorHalfTable(2) As Ubyte => {ATTR_FLOOR_0_HALF, ATTR_FLOOR_1_HALF, ATTR_FLOOR_2_HALF}
+' Precalculated floor attribute phases for maximum speed (6 variations)
+Dim floorAttrPhases(5, 31) As Ubyte => { _
+    { 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27 }, _
+    { 26, 51, 22, 26, 51, 22, 26, 51, 22, 26, 51, 22, 26, 51, 22, 26, 51, 22, 26, 51, 22, 26, 51, 22, 26, 51, 22, 26, 51, 22, 26, 51 }, _
+    { 27, 54, 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27, 54 }, _
+    { 51, 22, 26, 51, 22, 26, 51, 22, 26, 51, 22, 26, 51, 22, 26, 51, 22, 26, 51, 22, 26, 51, 22, 26, 51, 22, 26, 51, 22, 26, 51, 22 }, _
+    { 54, 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27, 54, 18 }, _
+    { 22, 26, 51, 22, 26, 51, 22, 26, 51, 22, 26, 51, 22, 26, 51, 22, 26, 51, 22, 26, 51, 22, 26, 51, 22, 26, 51, 22, 26, 51, 22, 26 } _
+}
 
 ' Pipe state
 ' pipeGap(i): row of the gap top for pipe slot i
@@ -38,9 +45,9 @@ Dim emptyTile(7) As Ubyte => {0,0,0,0,0,0,0,0}
 Dim currentFloorTile As Integer
 
 ' Bird physics (fixed point: velocity in cells/frame)
-Const BIRD_GRAVITY     As Fixed = 0.30  ' acceleration per frame
+Const BIRD_GRAVITY     As Fixed = 0.20  ' acceleration per frame
 Const BIRD_MAX_VEL     As Fixed = 1.5   ' terminal velocity (cells/frame)
-Const BIRD_JUMP_VEL    As Fixed = -1.0  ' velocity applied on jump
+Const BIRD_JUMP_VEL    As Fixed = -0.75  ' velocity applied on jump
 Const BIRD_INITIAL_VEL As Fixed = 0.25  ' velocity at game start
 
 Dim birdVel  As Fixed   ' velocity in cells/frame (positive = down)

@@ -70,13 +70,8 @@ Sub scroll()
 End Sub
 
 Function floorAttr(col As Ubyte) As Ubyte
-    Dim worldStep As Ubyte = worldCol / 2
-    Dim idx As Ubyte = (col + worldStep) Mod 3
-    If (worldCol Mod 2) = 0 Then
-        Return attrFloorFullTable(idx)
-    Else
-        Return attrFloorHalfTable(idx)
-    End If
+    Dim phase As Ubyte = worldCol Mod 6
+    Return floorAttrPhases(phase, col)
 End Function
 
 ' ---------------------------------------------------------------
@@ -137,17 +132,9 @@ Sub drawPlayfieldPixels()
 End Sub
 
 Sub paintFloorAttrs()
-    Dim c As Ubyte
-    Dim worldStep As Ubyte = worldCol / 2
-    Dim idx As Ubyte
-    For c = 0 To 31
-        idx = (c + worldStep) Mod 3
-        If (worldCol Mod 2) = 0 Then
-            paint(c, 23, 1, 1, attrFloorFullTable(idx))
-        Else
-            paint(c, 23, 1, 1, attrFloorHalfTable(idx))
-        End If
-    Next c
+    Dim phase As Ubyte = worldCol Mod 6
+    ' Copy 32 bytes from the 2D matrix directly to row 23 attributes
+    memcopy(@floorAttrPhases(phase, 0), 23264, 32)
 End Sub
 
 ' ---------------------------------------------------------------
