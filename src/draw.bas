@@ -126,8 +126,18 @@ End Sub
 ' Draw the bird sprite at current position with correct attributes
 ' ---------------------------------------------------------------
 Sub drawBird()
-    ' Draw pixels
-    putChars(birdX, Int(birdYPos), 2, 2, @sprite0(0))
+    ' Calculate yo-yo animation frame (0, 1, 2, 1) changing every 2 ticks
+    Dim animIdx As Ubyte = (worldCol / 2) Mod 4
+    If animIdx = 3 Then animIdx = 1
+    
+    ' Draw pixels based on animation frame
+    If animIdx = 0 Then
+        putChars(birdX, Int(birdYPos), 2, 2, @sprite0(0))
+    ElseIf animIdx = 1 Then
+        putChars(birdX, Int(birdYPos), 2, 2, @sprite1(0))
+    Else
+        putChars(birdX, Int(birdYPos), 2, 2, @sprite2(0))
+    End If
     
     ' Paint bird with Yellow Ink (6) and Blue Paper (1) -> 14
     paint(birdX, Int(birdYPos), 2, 2, 14)
