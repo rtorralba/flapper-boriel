@@ -43,12 +43,12 @@ End Sub
 ' pipe0 trailing col (wc=3) painted at worldCol=3, reaches col6 at worldCol=28  -> wc=28%36=28
 ' pipe1 trailing col (wc=21) painted at worldCol=21, reaches col6 at worldCol=46 -> wc=46%36=10
 Sub checkScore()
-    If pipeActive(0) And pipeX(0) = birdX And (worldCol Mod 2) = 0 Then
+    If pipeActive(0) And pipeX(0) = birdX And (worldCol bAnd 1) = 0 Then
         incrementScore()
         nextPipeGap(0) = 3 + (score Mod 12)
     End If
     
-    If pipeActive(1) And pipeX(1) = birdX And (worldCol Mod 2) = 0 Then
+    If pipeActive(1) And pipeX(1) = birdX And (worldCol bAnd 1) = 0 Then
         incrementScore()
         nextPipeGap(1) = 3 + ((score + 5) Mod 12)
     End If
