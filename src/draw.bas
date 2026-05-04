@@ -10,7 +10,7 @@ Sub updatePipes()
     
     If wc = 0 Then
         If pipeActive(0) And pipeX(0) > -PIPE_WIDTH Then
-            erasePipeColumn(pipeX(0) + PIPE_WIDTH - 1, pipeGap(0))
+            writePipeColumn(pipeX(0) + PIPE_WIDTH - 1, pipeGap(0), ATTR_SKY)
         End If
         pipeActive(0) = 1
         pipeX(0) = 32
@@ -18,11 +18,21 @@ Sub updatePipes()
     End If
     If wc = PIPE_SPAWN_INTERVAL Then
         If pipeActive(1) And pipeX(1) > -PIPE_WIDTH Then
-            erasePipeColumn(pipeX(1) + PIPE_WIDTH - 1, pipeGap(1))
+            writePipeColumn(pipeX(1) + PIPE_WIDTH - 1, pipeGap(1), ATTR_SKY)
         End If
         pipeActive(1) = 1
         pipeX(1) = 32
         pipeGap(1) = nextPipeGap(1)
+    End If
+    
+    Dim attrFront As Ubyte
+    Dim attrBack As Ubyte
+    If (worldCol Mod 2) = 1 Then
+        attrFront = ATTR_FIRST_HALF
+        attrBack = ATTR_LAST_HALF
+    Else
+        attrFront = ATTR_PIPE
+        attrBack = ATTR_SKY
     End If
     
     For i = 0 To 1
@@ -33,28 +43,17 @@ Sub updatePipes()
             leadingCol = pX - 1
             trailingCol = pX + PIPE_WIDTH - 1
             
-            If (worldCol Mod 2) = 1 Then
-                ' Odd frame: half tiles
-                If leadingCol >= 0 And leadingCol <= 31 Then
-                    writePipeColumn(leadingCol, gap, ATTR_FIRST_HALF)
-                End If
-                If trailingCol >= 0 And trailingCol <= 31 Then
-                    writePipeColumn(trailingCol, gap, ATTR_LAST_HALF)
-                End If
-            Else
-                ' Even frame: full tiles
-                If leadingCol >= 0 And leadingCol <= 31 Then
-                    writePipeColumn(leadingCol, gap, ATTR_PIPE)
-                End If
-                If trailingCol >= 0 And trailingCol <= 31 Then
-                    erasePipeColumn(trailingCol, gap)
-                End If
-                
+            If leadingCol >= 0 And leadingCol <= 31 Then
+                writePipeColumn(leadingCol, gap, attrFront)
+            End If
+            
+            If trailingCol >= 0 And trailingCol <= 31 Then
+                writePipeColumn(trailingCol, gap, attrBack)
+            End If
+            
+            If (worldCol Mod 2) = 0 Then
                 pipeX(i) = pX - 1
-                
-                If pipeX(i) < -PIPE_WIDTH Then
-                    pipeActive(i) = 0
-                End If
+                If pipeX(i) < -PIPE_WIDTH Then pipeActive(i) = 0
             End If
         End If
     Next i
@@ -80,44 +79,20 @@ End Function
 ' in the play area (rows 0..20) using direct POKE to the
 ' currently mapped attribute buffer.
 ' Rows gap..gap+GAP-1  -> ATTR_SKY
-' Rows 0..gap-1        -> ATTR_PIPE
-' Rows gap+GAP..19     -> ATTR_PIPE
+' Rows 0..gap-1        -> attr
+' Rows gap+GAP..19     -> attr
 ' Row 20               -> ATTR_FLOOR
 ' ---------------------------------------------------------------
 Sub writePipeColumn(col As Ubyte, gap As Ubyte, attr As Ubyte)
-    Dim r As Ubyte
     If gap > 0 Then
-        For r = 1 To gap
-            paint(col, r, 1, 1, attr)
-        Next r
+        paint(col, 1, 1, gap, attr)
     End If
+    
     Dim pipeLow As Ubyte = 22 - gap - PIPE_GAP_SIZE
     If pipeLow > 0 Then
-        For r = gap + PIPE_GAP_SIZE + 1 To 22
-            paint(col, r, 1, 1, attr)
-        Next r
+        paint(col, gap + PIPE_GAP_SIZE + 1, 1, pipeLow, attr)
     End If
-    paint(col, 23, 1, 1, floorAttr(col))
-End Sub
-
-' ---------------------------------------------------------------
-' erasePipeColumn col, gap
-' Clears the pipe attribute and pixels for the given column,
-' leaving the gap untouched.
-' ---------------------------------------------------------------
-Sub erasePipeColumn(col As Ubyte, gap As Ubyte)
-    Dim r As Ubyte
-    If gap > 0 Then
-        For r = 1 To gap
-            paint(col, r, 1, 1, ATTR_SKY)
-        Next r
-    End If
-    Dim pipeLow As Ubyte = 22 - gap - PIPE_GAP_SIZE
-    If pipeLow > 0 Then
-        For r = gap + PIPE_GAP_SIZE + 1 To 22
-            paint(col, r, 1, 1, ATTR_SKY)
-        Next r
-    End If
+    
     paint(col, 23, 1, 1, floorAttr(col))
 End Sub
 
