@@ -1,4 +1,4 @@
-Const ATTR_SKY          As Ubyte = 14
+Const ATTR_SKY          As Ubyte = 9
 Const ATTR_PIPE         As Ubyte = 36
 Const ATTR_FIRST_HALF   As Ubyte = 33
 Const ATTR_LAST_HALF    As Ubyte = 12

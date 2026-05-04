@@ -94,14 +94,12 @@ Sub writePipeColumn(col As Ubyte, gap As Ubyte, attr As Ubyte)
     If gap > 0 Then
         For r = 1 To gap
             paint(col, r, 1, 1, attr)
-            putChars(col, r, 1, 1, @halfTile(0))
         Next r
     End If
     Dim pipeLow As Ubyte = 22 - gap - PIPE_GAP_SIZE
     If pipeLow > 0 Then
         For r = gap + PIPE_GAP_SIZE + 1 To 22
             paint(col, r, 1, 1, attr)
-            putChars(col, r, 1, 1, @halfTile(0))
         Next r
     End If
     paint(col, 23, 1, 1, floorAttr(col))
@@ -116,25 +114,26 @@ Sub erasePipeColumn(col As Ubyte, gap As Ubyte)
     Dim r As Ubyte
     If gap > 0 Then
         For r = 1 To gap
-            putChars(col, r, 1, 1, @emptyTile(0))
             paint(col, r, 1, 1, ATTR_SKY)
         Next r
     End If
     Dim pipeLow As Ubyte = 22 - gap - PIPE_GAP_SIZE
     If pipeLow > 0 Then
         For r = gap + PIPE_GAP_SIZE + 1 To 22
-            putChars(col, r, 1, 1, @emptyTile(0))
             paint(col, r, 1, 1, ATTR_SKY)
         Next r
     End If
     paint(col, 23, 1, 1, floorAttr(col))
 End Sub
 
-Sub drawFloorPixels()
+Sub drawPlayfieldPixels()
+    Dim r As Ubyte
     Dim c As Ubyte
-    For c = 0 To 31
-        putChars(c, 23, 1, 1, @halfTile(0))
-    Next c
+    For r = 1 To 23
+        For c = 0 To 31
+            putChars(c, r, 1, 1, @halfTile(0))
+        Next c
+    Next r
 End Sub
 
 Sub paintFloorAttrs()
@@ -157,7 +156,7 @@ End Sub
 ' ---------------------------------------------------------------
 Sub initPlayfield()
     paint(0, 1, 32, 22, ATTR_SKY)
-    drawFloorPixels()
+    drawPlayfieldPixels()
     paintFloorAttrs()
 End Sub
 
@@ -165,17 +164,25 @@ End Sub
 ' Draw the bird sprite at current position with correct attributes
 ' ---------------------------------------------------------------
 Sub drawBird()
-    ' Only draw pixels - do NOT overwrite background attributes
-    ' so collision detection can read pipe/sky attrs correctly.
+    ' Draw pixels
     putChars(birdX, Int(birdYPos), 2, 2, @sprite0(0))
+    
+    ' Paint bird with Yellow Ink (6) and Blue Paper (1) -> 14
+    paint(birdX, Int(birdYPos), 2, 2, 14)
 End Sub
 
 ' ---------------------------------------------------------------
 ' Erase bird sprite at given position (restore sky attrs + blank pixels)
 ' ---------------------------------------------------------------
 Sub eraseBird(bx As Ubyte, by As Ubyte)
-    ' Zero out pixels only - no Print, no paint: attrs stay intact
-    putChars(bx, by, 2, 2, @blankSprite(0))
+    ' Restore halfTile pattern instead of leaving a blank hole
+    putChars(bx, by, 1, 1, @halfTile(0))
+    putChars(bx + 1, by, 1, 1, @halfTile(0))
+    putChars(bx, by + 1, 1, 1, @halfTile(0))
+    putChars(bx + 1, by + 1, 1, 1, @halfTile(0))
+    
+    ' Restore the sky attributes in one line
+    paint(bx, by, 2, 2, ATTR_SKY)
 End Sub
 
 Sub redrawBird()

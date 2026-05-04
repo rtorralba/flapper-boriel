@@ -11,12 +11,13 @@ Sub showPlayGameScreen(clearScreen As Ubyte)
         gravity()
         ' waitretrace
         scroll()
-        redrawBird()
-        checkScore()
         
         If checkBirdCollision(birdX, Int(birdYPos)) Then
             showGameOverScreen()
         End If
+        
+        redrawBird()
+        checkScore()
         ' waitAnyKey()
     Loop
 End Sub
