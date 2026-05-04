@@ -36,25 +36,29 @@ Sub updatePipes()
     End If
     
     For i = 0 To 1
-        If pipeActive(i) Then
-            pX = pipeX(i)
-            gap = pipeGap(i)
-            
-            leadingCol = pX - 1
-            trailingCol = pX + PIPE_WIDTH - 1
-            
-            If leadingCol >= 0 And leadingCol <= 31 Then
+        If Not pipeActive(i) Then Continue For
+        
+        pX = pipeX(i)
+        gap = pipeGap(i)
+        
+        leadingCol = pX - 1
+        trailingCol = pX + PIPE_WIDTH - 1
+        
+        If leadingCol >= 0 Then
+            If leadingCol <= 31 Then
                 writePipeColumn(leadingCol, gap, attrFront)
             End If
-            
-            If trailingCol >= 0 And trailingCol <= 31 Then
+        End If
+        
+        If trailingCol >= 0 Then
+            If trailingCol <= 31 Then
                 writePipeColumn(trailingCol, gap, attrBack)
             End If
-            
-            If (worldCol Mod 2) = 0 Then
-                pipeX(i) = pX - 1
-                If pipeX(i) < -PIPE_WIDTH Then pipeActive(i) = 0
-            End If
+        End If
+        
+        If (worldCol Mod 2) = 0 Then
+            pipeX(i) = pX - 1
+            If pipeX(i) < -PIPE_WIDTH Then pipeActive(i) = 0
         End If
     Next i
 End Sub
