@@ -50,7 +50,7 @@ Sub bufferPipes()
     
     Dim attrFront As Ubyte
     Dim attrBack As Ubyte
-    If (worldCol bAnd 1) = 1 Then
+    If worldCol Mod 2 = 1 Then
         attrFront = ATTR_FIRST_HALF
         attrBack = ATTR_LAST_HALF
     Else
@@ -73,7 +73,7 @@ Sub bufferPipes()
             bufferPipeColumn(trailingCol, gap, attrBack)
         End If
         
-        If (worldCol bAnd 1) = 0 Then
+        If worldCol Mod 2 = 0 Then
             pipeX(i) = pX - 1
             If pipeX(i) < -PIPE_WIDTH Then pipeActive(i) = 0
         End If
