@@ -11,6 +11,8 @@ Esta entrada documenta los cambios introducidos en la rama `feat-4px-scroll-and-
 - Ajustes en el pipeline de render para evitar tearing: cálculo previo en `screenBuffer` y un único `memcopy` al final del frame.
 - Revisión de colisión para funcionar correctamente con el scroll de 4px.
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/rsFkA2AfYEk?si=TVgGOsP_G5FXmACH" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
 Motivación
 
 La versión anterior usaba un desplazamiento coordinado a nivel de atributos (columnas de 8×8 caracteres / cajas de atributo), lo que limitaba el movimiento horizontal a incrementos grandes y hacía la animación menos fluida. Pasar a 4px por frame mejora la sensación de movimiento sin cambiar la geometría del juego.
@@ -92,6 +94,8 @@ This devlog describes the changes in branch `feat-4px-scroll-and-sprite-animatio
 - Sprite animation for the bird (frame alternation).
 - Render pipeline adjusted to compute into `screenBuffer` and perform a single `memcopy` per frame to avoid tearing.
 - Collision checks adapted to work correctly with sub-column pixel scrolling.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/rsFkA2AfYEk?si=TVgGOsP_G5FXmACH" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 Motivation
 
