@@ -3,13 +3,6 @@ Const ATTR_PIPE         As Ubyte = 36
 Const ATTR_FIRST_HALF   As Ubyte = 33
 Const ATTR_LAST_HALF    As Ubyte = 12
 
-Const ATTR_FLOOR_0 As Ubyte = 18  ' Ink 2, Paper 2, matte red/red
-Const ATTR_FLOOR_0_HALF As Ubyte = 26  ' Ink 2, Paper 3, matte red/magenta
-Const ATTR_FLOOR_1 As Ubyte = 27  ' Ink 3, Paper 3, matte magenta/magenta
-Const ATTR_FLOOR_1_HALF As Ubyte = 51  ' Ink 3, Paper 6, matte magenta/yellow
-Const ATTR_FLOOR_2 As Ubyte = 54  ' Ink 6, Paper 6, matte yellow/yellow
-Const ATTR_FLOOR_2_HALF As Ubyte = 22  ' Ink 6, Paper 2, matte yellow/red
-
 ' Precalculated floor attribute phases for maximum speed (6 variations)
 Dim floorAttrPhases(5, 31) As Ubyte => { _
     { 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27, 54, 18, 27 }, _
