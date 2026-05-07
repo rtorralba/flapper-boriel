@@ -59,6 +59,4 @@ Sub screenSync()
         ' At low score, run at half speed to give player more time to react
         waitretrace
     End If
-    ' waitretrace
-    ' waitretrace
 End Sub

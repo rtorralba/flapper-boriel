@@ -15,7 +15,6 @@ Dim floorAttrPhases(5, 31) As Ubyte => { _
 
 ' Pipe state
 ' pipeGap(i): row of the gap top for pipe slot i
-Const NUM_PIPES As Ubyte = 2
 Const PIPE_GAP_SIZE As Ubyte = 6
 Const PIPE_WIDTH As Ubyte = 5
 Const PIPE_SPAWN_INTERVAL As Ubyte = 36
@@ -28,14 +27,8 @@ Const BIRD_INITIAL_Y As Ubyte = 10
 Dim birdX    As Ubyte
 Dim birdOldY As Ubyte
 
-' Blank 2x2 sprite (32 zero bytes) used to erase bird pixels without touching attrs
-Dim blankSprite(31) As Ubyte => {0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0}
-
 ' Half-block tile: left 4 pixels ON ($F0) on every scanline — used for half-char drawing
 Dim halfTile(7) As Ubyte => {$F0,$F0,$F0,$F0,$F0,$F0,$F0,$F0}
-Dim emptyTile(7) As Ubyte => {0,0,0,0,0,0,0,0}
-
-Dim currentFloorTile As Integer
 
 ' Bird physics (fixed point: velocity in cells/frame)
 Const BIRD_GRAVITY     As Fixed = 0.20  ' acceleration per frame

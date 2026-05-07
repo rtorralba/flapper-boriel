@@ -101,11 +101,6 @@ Sub scroll()
     worldCol = worldCol + 1
 End Sub
 
-Function floorAttr(col As Ubyte) As Ubyte
-    Dim phase As Ubyte = worldCol Mod 6
-    Return floorAttrPhases(phase, col)
-End Function
-
 Sub drawPlayfieldPixels()
     Dim r As Ubyte
     Dim c As Ubyte
