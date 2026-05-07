@@ -9,16 +9,11 @@ Sub showPlayGameScreen(clearScreen As Ubyte)
         readKeyboard()
         preserveYPosition()
         gravity()
-        ' waitretrace
         scroll()
-        
         If checkBirdCollision(birdX, Int(birdYPos)) Then
-            redrawBird()
             showGameOverScreen()
         End If
         
-        redrawBird()
         checkScore()
-        ' waitAnyKey()
     Loop
 End Sub

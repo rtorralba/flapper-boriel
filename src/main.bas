@@ -10,8 +10,8 @@
 #include "spriteset.bas"
 #include "input.bas"
 #include "physics.bas"
-#include "draw.bas"
 #include "collision.bas"
+#include "draw.bas"
 
 ' Screens of the game
 #include "screens/playGame.bas"

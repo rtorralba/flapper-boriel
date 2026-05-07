@@ -51,6 +51,13 @@ Dim nextPipeGap(1) As Ubyte
 Dim pipeX(1) As Integer
 Dim pipeActive(1) As Ubyte
 
+' Screen attribute buffer for rows 1..23 (736 bytes).
+' calculatePipes writes columns 1..22 here; paintPipes copies row 23 (floor)
+' then does a single memcopy of all 736 bytes to attribute RAM at 22560.
+' Index for row r (1..22), col c (0..31) = (r-1)*32 + c
+' Floor row 23 occupies indices 704..735.
+Dim screenBuffer(735) As Ubyte
+
 ' World scroll counter: how many columns have entered from the right
 Dim worldCol As UInteger
 

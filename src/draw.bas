@@ -1,5 +1,28 @@
-' implementation detail: pipe movement logic is updated manually by drawing only the edges
-Sub updatePipes()
+' Writes a full play-area column (rows 1..22) into screenBuffer.
+' Top rows 1..gap and bottom rows gap+PIPE_GAP_SIZE+1..22 get attr.
+' Gap rows get ATTR_SKY. Passing attr=ATTR_SKY erases the whole column.
+' NOTE: index = (r-1)*32+col can exceed 255 so we use a UInteger offset
+'       that starts at col (row 1) and advances 32 per row to avoid overflow.
+Sub bufferPipeColumn(col As Ubyte, gap As Ubyte, attr As Ubyte)
+    Dim r As Ubyte
+    Dim offset As UInteger = col  ' offset for row 1, col col  (=(1-1)*32+col)
+    For r = 1 To gap
+        screenBuffer(offset) = attr
+        offset = offset + 32
+    Next r
+    For r = gap + 1 To gap + PIPE_GAP_SIZE
+        screenBuffer(offset) = ATTR_SKY
+        offset = offset + 32
+    Next r
+    For r = gap + PIPE_GAP_SIZE + 1 To 22
+        screenBuffer(offset) = attr
+        offset = offset + 32
+    Next r
+End Sub
+
+' Computes all pipe state and writes attribute columns directly into screenBuffer.
+' No screen memory is touched here. Call before waitretrace.
+Sub bufferPipes()
     Dim i As Ubyte
     Dim pX As Integer
     Dim gap As Ubyte
@@ -10,7 +33,7 @@ Sub updatePipes()
     
     If wc = 0 Then
         If pipeActive(0) And pipeX(0) > -PIPE_WIDTH Then
-            writePipeColumn(pipeX(0) + PIPE_WIDTH - 1, pipeGap(0), ATTR_SKY)
+            bufferPipeColumn(pipeX(0) + PIPE_WIDTH - 1, pipeGap(0), ATTR_SKY)
         End If
         pipeActive(0) = 1
         pipeX(0) = 32
@@ -18,7 +41,7 @@ Sub updatePipes()
     End If
     If wc = PIPE_SPAWN_INTERVAL Then
         If pipeActive(1) And pipeX(1) > -PIPE_WIDTH Then
-            writePipeColumn(pipeX(1) + PIPE_WIDTH - 1, pipeGap(1), ATTR_SKY)
+            bufferPipeColumn(pipeX(1) + PIPE_WIDTH - 1, pipeGap(1), ATTR_SKY)
         End If
         pipeActive(1) = 1
         pipeX(1) = 32
@@ -35,7 +58,6 @@ Sub updatePipes()
         attrBack = ATTR_SKY
     End If
     
-    ' Pase 1: Dibujar TODAS las partes de ARRIBA primero (para ganar al haz de luz de la TV)
     For i = 0 To 1
         If Not pipeActive(i) Then Continue For
         pX = pipeX(i)
@@ -43,29 +65,12 @@ Sub updatePipes()
         leadingCol = pX - 1
         trailingCol = pX + PIPE_WIDTH - 1
         
-        If leadingCol >= 0 Then
-            If leadingCol <= 31 Then writePipeTop(leadingCol, gap, attrFront)
+        If leadingCol >= 0 And leadingCol <= 31 Then
+            bufferPipeColumn(leadingCol, gap, attrFront)
         End If
         
-        If trailingCol >= 0 Then
-            If trailingCol <= 31 Then writePipeTop(trailingCol, gap, attrBack)
-        End If
-    Next i
-    
-    ' Pase 2: Dibujar TODAS las partes de ABAJO después (el haz ya va más abajo, es seguro)
-    For i = 0 To 1
-        If Not pipeActive(i) Then Continue For
-        pX = pipeX(i)
-        gap = pipeGap(i)
-        leadingCol = pX - 1
-        trailingCol = pX + PIPE_WIDTH - 1
-        
-        If leadingCol >= 0 Then
-            If leadingCol <= 31 Then writePipeBottom(leadingCol, gap, attrFront)
-        End If
-        
-        If trailingCol >= 0 Then
-            If trailingCol <= 31 Then writePipeBottom(trailingCol, gap, attrBack)
+        If trailingCol >= 0 And trailingCol <= 31 Then
+            bufferPipeColumn(trailingCol, gap, attrBack)
         End If
         
         If (worldCol bAnd 1) = 0 Then
@@ -75,10 +80,24 @@ Sub updatePipes()
     Next i
 End Sub
 
+Sub bufferFloor()
+    Dim phase As Ubyte = worldCol Mod 6
+    memcopy(@floorAttrPhases(phase, 0), @screenBuffer(704), 32)
+End Sub
+
+' Copies the floor phase into screenBuffer row 23, then blits the entire
+' attribute buffer (rows 1..23, 736 bytes) to screen in one memcopy.
+' Call immediately after waitretrace.
+Sub renderBufferToScreen()
+    memcopy(@screenBuffer(0), 22560, 736)
+End Sub
+
 Sub scroll()
+    bufferPipes()
+    bufferFloor()
     waitretrace
-    updatePipes()
-    paintFloorAttrs()
+    renderBufferToScreen()
+    redrawBird()
     worldCol = worldCol + 1
 End Sub
 
@@ -86,34 +105,6 @@ Function floorAttr(col As Ubyte) As Ubyte
     Dim phase As Ubyte = worldCol Mod 6
     Return floorAttrPhases(phase, col)
 End Function
-
-' ---------------------------------------------------------------
-' writePipeColumn col, gap, attr
-' Writes attribute bytes for a single column at col (0..31)
-' in the play area (rows 0..20) using direct POKE to the
-' currently mapped attribute buffer.
-' Rows gap..gap+GAP-1  -> ATTR_SKY
-' Rows 0..gap-1        -> attr
-' Rows gap+GAP..19     -> attr
-' Row 20               -> ATTR_FLOOR
-' ---------------------------------------------------------------
-Sub writePipeTop(col As Ubyte, gap As Ubyte, attr As Ubyte)
-    If gap > 0 Then
-        paint(col, 1, 1, gap, attr)
-    End If
-End Sub
-
-Sub writePipeBottom(col As Ubyte, gap As Ubyte, attr As Ubyte)
-    Dim pipeLow As Ubyte = 22 - gap - PIPE_GAP_SIZE
-    If pipeLow > 0 Then
-        paint(col, gap + PIPE_GAP_SIZE + 1, 1, pipeLow, attr)
-    End If
-End Sub
-
-Sub writePipeColumn(col As Ubyte, gap As Ubyte, attr As Ubyte)
-    writePipeTop(col, gap, attr)
-    writePipeBottom(col, gap, attr)
-End Sub
 
 Sub drawPlayfieldPixels()
     Dim r As Ubyte
@@ -139,6 +130,11 @@ Sub initPlayfield()
     paint(0, 1, 32, 22, ATTR_SKY)
     drawPlayfieldPixels()
     paintFloorAttrs()
+    ' Also initialise screenBuffer so bufferPipes starts from a clean state
+    Dim j As UInteger
+    For j = 0 To 703
+        screenBuffer(j) = ATTR_SKY
+    Next j
 End Sub
 
 ' ---------------------------------------------------------------
@@ -177,7 +173,6 @@ Sub eraseBird(bx As Ubyte, by As Ubyte)
 End Sub
 
 Sub redrawBird()
-    ' waitretrace
     eraseBird(birdX, birdOldY)
     drawBird()
 End Sub
