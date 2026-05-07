@@ -78,10 +78,8 @@ End Sub
 Sub scroll()
     waitretrace
     updatePipes()
-    waitretrace
     paintFloorAttrs()
     worldCol = worldCol + 1
-    ' drawFloorPixels()
 End Sub
 
 Function floorAttr(col As Ubyte) As Ubyte
@@ -110,7 +108,6 @@ Sub writePipeBottom(col As Ubyte, gap As Ubyte, attr As Ubyte)
     If pipeLow > 0 Then
         paint(col, gap + PIPE_GAP_SIZE + 1, 1, pipeLow, attr)
     End If
-    paint(col, 23, 1, 1, floorAttr(col))
 End Sub
 
 Sub writePipeColumn(col As Ubyte, gap As Ubyte, attr As Ubyte)
