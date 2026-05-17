@@ -33,8 +33,8 @@ End Sub
 
 Sub toogleSpeedOption()
     ' Toggle speed mode and update menu text
-    borielSpeed = Not borielSpeed
-    
+    speed = Not speed
+
     printSpeed()
 End Sub
 
