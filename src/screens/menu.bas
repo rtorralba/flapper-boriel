@@ -39,7 +39,7 @@ Sub toogleSpeedOption()
 End Sub
 
 Sub printSpeed()
-    If borielSpeed = 0 Then
+    If speed = 0 Then
         Print At 11, 7; Paper 0; Ink 7;         "(S)peed: NORMAL "
     Else
         Print At 11, 7; Paper 0; Ink 7;         "(S)peed: BORIEL "
