@@ -26,7 +26,7 @@ Cómo probar
 
 Enlaces
 -------
-- Rama con los cambios: https://github.com/rtorralba/flapper-boriel/tree/feat/4px-scroll-and-sprite-animation
+- Rama con los cambios: [https://github.com/rtorralba/flapper-boriel/tree/feat/difficulty-selector](https://github.com/rtorralba/flapper-boriel/tree/feat/difficulty-selector)
 
 English
 -------
@@ -53,4 +53,4 @@ How to test
 
 Links
 -----
-- Branch with changes: https://github.com/rtorralba/flapper-boriel/tree/feat/4px-scroll-and-sprite-animation
+- Branch with changes: [https://github.com/rtorralba/flapper-boriel/tree/feat/difficulty-selector](https://github.com/rtorralba/flapper-boriel/tree/feat/difficulty-selector)
