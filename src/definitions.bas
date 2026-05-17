@@ -44,6 +44,9 @@ Dim nextPipeGap(1) As Ubyte
 Dim pipeX(1) As Integer
 Dim pipeActive(1) As Ubyte
 
+' Speed mode: 0 = normal (waitretrace enabled), 1 = Boriel speed (no waitretrace)
+Dim borielSpeed As Ubyte
+
 ' Screen attribute buffer for rows 1..23 (736 bytes).
 ' calculatePipes writes columns 1..22 here; paintPipes copies row 23 (floor)
 ' then does a single memcopy of all 736 bytes to attribute RAM at 22560.

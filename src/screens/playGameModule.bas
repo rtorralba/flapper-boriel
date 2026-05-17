@@ -55,5 +55,7 @@ Sub checkScore()
 End Sub
 
 Sub screenSync()
-    waitretrace
+    If borielSpeed = 0 Then
+        waitretrace
+    End If
 End Sub

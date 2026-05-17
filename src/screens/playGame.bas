@@ -11,7 +11,7 @@ Sub showPlayGameScreen(clearScreen As Ubyte)
         gravity()
         scroll()
         If checkBirdCollision(birdX, Int(birdYPos)) Then
-            showGameOverScreen()
+            showMenuScreen()
         End If
         
         checkScore()

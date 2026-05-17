@@ -16,7 +16,6 @@
 ' Screens of the game
 #include "screens/playGame.bas"
 #include "screens/menu.bas"
-#include "screens/gameOver.bas"
 
 Border 0: Paper 1: Ink 6: Cls
 
